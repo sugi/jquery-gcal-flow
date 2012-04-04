@@ -1,7 +1,8 @@
 $ = jQuery
 
-if window and window._gCalFlow_debug and console
+if window? and window._gCalFlow_debug? and console?
   log = console
+  log.debug ?= log.log
 else
   log = {}
   log.error = log.warn = log.log = log.info = log.debug = ->
@@ -77,6 +78,16 @@ base_obj =
       url: this.gcal_url()
     }
 
+  parse_date: (dstr) ->
+    di = Date.parse dstr
+    if !di
+      d = dstr.split('T')
+      dinfo = $.merge d[0].split('-'), if d[1] then d[1].split(':')[0..1] else []
+      eval "new Date(#{dinfo.join(',')});"
+    else
+      new Date(di)
+
+
   render_data: (data) ->
     log.debug "start rendering for data:", data
     feed = data.feed
@@ -84,7 +95,7 @@ base_obj =
 
     titlelink = this.opts.titlelink ? "http://www.google.com/calendar/embed?src=#{this.opts.calid}"
     t.find('.gcf-title').html $("<a />").attr({target: '_blank', href: titlelink}).text feed.title.$t
-    t.find('.gcf-last-update').text this.opts.date_formatter new Date(Date.parse(feed.updated.$t))
+    t.find('.gcf-last-update').text this.opts.date_formatter this.parse_date feed.updated.$t
 
     it = t.find('.gcf-item-block')
     it.detach()
@@ -97,7 +108,7 @@ base_obj =
       ci = it.clone()
       `if (ent.gd$when) {` # hmmmmmmmmmmmm, why cannot I use normal if by syntax error????
       st = ent.gd$when[0].startTime
-      idate = this.opts.date_formatter this.parse_date(st), st.indexOf('T') < 0 
+      idate = this.opts.date_formatter this.parse_date(st), st.indexOf('T') < 0
       ci.find('.gcf-item-date').text idate
       `}`
       ci.find('.gcf-item-title').html $('<a />').attr({target: '_blank', href: ent.link[0].href}).text ent.title.$t
