@@ -1,0 +1,53 @@
+
+jQuery gCalFlow plugin
+======================
+
+jQuery plugin to format your google calenar updates.
+
+Description
+-----------
+
+This plugin provides a widget shows updates of your
+google calendar with configurable options and your
+HTML desgin template.
+
+.Simple way
+
+[source, javascript]
+---------------------------------------------------
+$('#gcal-flow-container').gCalFlow();
+---------------------------------------------------
+
+.With 
+
+.Use your HTML template
+
+
+Options
+-------
+
+|=================================
+|name | type | default
+|calid| string | (none, required!)
+|maxitem| int | 15
+|
+|=================================
+
+
+ * 
+
+
+Examples
+--------
+
+See examples.html
+
+License
+-------
+
+MIT (http://www.opensource.org/licenses/MIT)
+
+Author
+------
+
+Tatsuki Sugiura <sugi@nemui.org>
