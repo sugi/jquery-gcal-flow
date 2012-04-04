@@ -19,7 +19,7 @@ clean:
 version: jquery.gcal_flow.js
 	@echo $(VERSION)
 
-dist: jquery.gcal_flow.js jquery.gcal_flow.scss
+dist: jquery.gcal_flow.js jquery.gcal_flow.css
 	mkdir -p jquery-gcal-flow-$(VERSION)
 	install -m 644 README.asciidoc *.html *.js *.css jquery-gcal-flow-$(VERSION)
 	zip -9r jquery-gcal-flow-$(VERSION).zip jquery-gcal-flow-$(VERSION)
