@@ -97,7 +97,7 @@ base_obj =
       ci = it.clone()
       `if (ent.gd$when) {` # hmmmmmmmmmmmm, why cannot I use normal if by syntax error????
       st = ent.gd$when[0].startTime
-      idate = this.opts.date_formatter new Date Date.parse st, st.indexOf('T') > -1
+      idate = this.opts.date_formatter this.parse_date(st), st.indexOf('T') < 0 
       ci.find('.gcf-item-date').text idate
       `}`
       ci.find('.gcf-item-title').html $('<a />').attr({target: '_blank', href: ent.link[0].href}).text ent.title.$t
