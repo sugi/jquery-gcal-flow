@@ -9,7 +9,12 @@ clean:
 	coffee -c $<
 
 %.css: %.scss
-	scss $< > $@
+	if scss $< > $@; then \
+	  true; \
+	else \
+       	  rm -f $@; \
+	  false; \
+	fi
 
 version: jquery.gcal_flow.js
 	@echo $(VERSION)

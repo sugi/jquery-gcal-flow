@@ -1,6 +1,6 @@
 <html>
   <head>
-    <link href=".css" rel="stylesheet" type="text/css">
+    <link href="jquery.gcal_flow.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
       google.load("jquery", "1.7.1");
@@ -12,28 +12,114 @@
     <script type="text/javascript">
       var $ = jQuery;
       $(function() {
-        $('#gcal-box').gCalFlow({calid: '0mprpb041vjq02lk80vtu6ajgo@group.calendar.google.com'});
+        $('#gcf-simple').gCalFlow({
+          calid: 'floss4science@gmail.com'
+        });
+        $('#gcf-design').gCalFlow({
+          calid: 'floss4science@gmail.com',
+          maxitem: 10,
+          date_formatter: function(d, allday_p) { return d.getYear().toString().substr(-2) + "/" + d.getMonth() }
+        });
+        $('#gcf-custom-template').gCalFlow({
+          calid: 'floss4science@gmail.com',
+          maxitem: 50
+        });
       });
     </script>
+    <style type="text/css">
+      h2 { clear: both; margin-top: 2em; }
+      #gcf-design .gcf-header-block { background: green; }
+      #gcf-design { height: 300px; width: 500px; background: #F0FFEE; }
+    </style>
   </head>
   <body>
+    <h1>Google Calendar Flow plugin Examples</h1>
+
+    <h2>Simple way</h2>
+    <div id="gcf-simple">  
+    </div>
+    <textarea  cols="60" rows="20">
     <div id="gcf-simple">
     </div>
-    <div id="gcf-default-template">
-      <div class="gcf-header">
-        <div>
-        Updates of <span class="gcf-cal-title">Your calendar name</span>
-        </div>
-        <div>
-        Last update: <span class="gcf-last-update">2012-02-30 20:58</span>
+    <script type="text/javascript">
+      $('#gcf-simple').gCalFlow({
+        calid: 'floss4science@gmail.com'
+      });
+    </script>
+    </textarea>
+
+<br><br>
+    <h2>Change size and color by CSS and option</h2>
+    <div id="gcf-design">
+    </div>
+    <textarea  cols="60" rows="20">
+    <style type="text/css">
+      #gcf-design {
+        height: 300px;
+        width: 500px;
+        background: #F0FFEE;
+      }
+      #gcf-design .gcf-header-block { background: green; }
+    </style>
+    <div id="gcf-design">
+    </div>
+    <script type="text/javascript">
+      $('#gcf-design').gCalFlow({
+        calid: 'floss4science@gmail.com',
+        maxitem: 10,
+        date_formatter: function(d, allday_p) { return d.getYear().toString().substr(-2) + "/" + d.getMonth()
+      });
+    </script>
+    </textarea>
+
+    <h2>Custom DOM for template</h2>
+    <div id="gcf-custom-template">
+      <div class="gcf-header-block">
+        <div class="gcf-title-block">
+          <span class="gcf-title">Your calendar name</span> updates
         </div>
       </div>
-      <div class="gcf-item-block">
-        <div class="item">
-          [<span class"gcf-item-date">2012-02-01 09:20 - 20:10</span>]
-          <strong class="gcf-item-title">Item Title of Your event</strong>
+      <div class="gcf-item-container-block">
+        <div class="gcf-item-block">
+          <div class="gcf-item-header-block">
+            <div class="gcf-item-title-block">
+              <span class="gcf-item-date">2012-02-01 09:00</span>:
+              <strong class="gcf-item-title">Item Title of Your event</strong>
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="gcf-last-update-block">
+        LastUpdate: <span class="gcf-last-update">2012-02-30 20:58</span>
       </div>
     </div>
+<textarea cols="60" rows="20">
+    <div id="gcf-custom-template">
+      <div class="gcf-header-block">
+        <div class="gcf-title-block">
+          <span class="gcf-title">Your calendar name</span> updates
+        </div>
+      </div>
+      <div class="gcf-item-container-block">
+        <div class="gcf-item-block">
+          <div class="gcf-item-header-block">
+            <div class="gcf-item-title-block">
+              <span class="gcf-item-date">2012-02-01 09:00</span>:
+              <strong class="gcf-item-title">Item Title of Your event</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="gcf-last-update-block">
+        LastUpdate: <span class="gcf-last-update">2012-02-30 20:58</span>
+      </div>
+    </div>
+    <script type="text/javascript">
+        $('#gcf-custom-template').gCalFlow({
+          calid: 'floss4science@gmail.com',
+          maxitem: 50
+        });
+    </script>
+</textarea>
   </body>
 </html>
