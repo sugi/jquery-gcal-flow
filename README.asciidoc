@@ -11,17 +11,6 @@ This plugin provides a widget shows updates of your
 google calendar with configurable options and your
 HTML desgin template.
 
-.Simple way
-
-[source, javascript]
----------------------------------------------------
-$('#gcal-flow-container').gCalFlow();
----------------------------------------------------
-
-.With 
-
-.Use your HTML template
-
 
 Options
 -------
@@ -30,11 +19,8 @@ Options
 |name | type | default
 |calid| string | (none, required!)
 |maxitem| int | 15
-|
+|date_formatter| function |
 |=================================
-
-
- * 
 
 
 Examples
