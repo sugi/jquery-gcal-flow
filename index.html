@@ -7,7 +7,23 @@
     
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/jquery.gcal_flow.css">
+    <style tyle="text/css">
+      .gCalFlow { font-size: 100%; }
+      .gCalFlow .gcf-item-date-block { background-color: #eee; }
+    </style>
     <script src="javascripts/scale.fix.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">google.load("jquery", "1.7.1");</script>
+    <script type="text/javascript">
+      var $ = jQuery;
+      $(function() {
+        $('#gcf-simple').gCalFlow({
+          calid: 'floss4science@gmail.com'
+        });
+      });
+    </script>
+    <script type="text/javascript" src="javascripts/jquery.gcal_flow.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -17,41 +33,197 @@
     <div class="wrapper">
       <header>
         <h1>jQuery Google Calendar Flow plugin</h1>
-        <p>jQuery Google Calendar Plugin</p>
+        <p>Show calendar updates on any website</p>
         <p class="view"><a href="https://github.com/sugi/jquery-gcal-flow">View the Project on GitHub <small>sugi/jquery-gcal-flow</small></a></p>
         <ul>
-          <li><a href="https://github.com/sugi/jquery-gcal-flow/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/sugi/jquery-gcal-flow/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/downloads/sugi/jquery-gcal-flow/jquery-gcal-flow-0.1.0.zip">Download <strong>StableZIP</strong></a></li>
+          <li><a href="https://github.com/sugi/jquery-gcal-flow/zipball/master">Download <strong>Source</strong></a></li>
           <li><a href="https://github.com/sugi/jquery-gcal-flow">Fork On <strong>GitHub</strong></a></li>
         </ul>
+        
+        <div id="gcf-simple" style="margin-right: 2em;"></div>
       </header>
       <section>
-        <h3>Welcome to GitHub Pages.</h3>
+        <h3>Put your calendar updates on any website</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+        <p>
+          jQuery Google Calendar Flow plugin provides a widget
+          to show list of recent updates of any calendar.
+          like the one on left column!
+        </p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+        <p>In the simplest way, you need to specify just calendar ID.
+          Left sample is show by following code:</p>
+<pre><code>$('#gcf-simple').gCalFlow({
+  calid: 'floss4science@gmail.com'
+});
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+        <h3>Customization</h3>
 
-<h3>Designer Templates</h3>
+        <p>
+          jQuery Google Calendar Flow plugin is hightly configureable with CSS, Javascript option and HTML templating!
+        </p>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+        <h4>CSS classes</h4>
 
-<h3>Rather Drive Stick?</h3>
+        <p>This plugin in uses following classes in default template. You can override with your design. Or, use your template to change design completely.<p>
+        </p>
+<pre><code>.gCalFlow
+  + .gcf-header-block
+  | + .gcf-title-block
+  |   + .gcf-title
+  + .gcf-item-container-block
+  | + .gcf-item-block
+  |   + .gcf-item-header-block
+  |   | + .gcf-item-date-block
+  |   | | + .gcf-item-date
+  |   | + .gcf-item-title-block
+  |   |   + .gcf-item-title
+  |   + .gcf-item-body-block
+  |     + .gcf-item-description
+  + .gcf-last-update-block
+    + .gcf-last-update
+</code></pre>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<h4>Options</h4>
 
-<h3>Authors and Contributors</h3>
+<p>Following options are avaiable for jQuery#gCalFlow call.</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<table border="1">
+<tr>
+<th>name</th>
+<th>type</th>
+<th>default</th>
+</tr>
+<tr>
+<td>calid</td>
+<td>string</td>
+<td>(none, required!)</td>
+</tr>
+<tr>
+<td>maxitem</td>
+<td>int</td>
+<td>15</td>
+</tr>
+<tr>
+<td>date_formatter</td>
+<td>function</td>
+<td>ISO date formatter. This function will be called with two arguments: Date instance and "all day flag".</td>
+</tr>
+</table> 
 
-<h3>Support or Contact</h3>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact support@github.com and we’ll help you sort it out.</p>
+<h4>Template</h4>
+
+<p>If target element has any child node, it will be treat as custom template.
+Google Calendar Flow plugin will replace text of elements by its classname.
+You can use any design by appling your template.
+</p>
+</p>
+<p>Note: <em>To use defualt template, Keep empty target element (has no child node)!</em></p>
+
+<p>Texts of elements with follwoing classname will be replaced:</P>
+
+<table border="1">
+<tr>
+<th>Class name</th>
+<th>Change value to</th>
+<th>Note</th>
+</tr>
+<tr>
+<td>gcf-title</td>
+<td>Calendar title</td>
+<td></td>
+</tr>
+<tr>
+<td>gcf-last-update</td>
+<td>Last update of tha calendar</td>
+<td></td>
+</tr>
+<tr>
+<td>gcf-item-container-block</td>
+<td></td>
+<td>This class item container. Elements with gcf-item-block class will be appended for each event item. If template dose NOT have this element, no items will be shown.</td>
+</tr>
+<tr>
+<td>gcf-item-block</td>
+<td></td>
+<td>This class will be treated as item template. </td>
+</tr>
+<tr>
+<td>gcf-item-date</td>
+<td>Item start date</td>
+<td>Must be a child of gcf-item-block.</td>
+</tr>
+<tr>
+<td>gcf-item-title</td>
+<td>Item title</td>
+<td>Must be a child of gcf-item-block.</td>
+</tr>
+<tr>
+<td>gcf-item-description</td>
+<td>Item description text</td>
+<td>Must be a child of gcf-item-block.</td>
+</tr>
+</table>
+
+<p>For example, following template shows only title of calenar updates.</p>
+
+<textarea id="template-sample-script" style="width:100%; height: 14em; border: solid 1px #ccc;" readonly="true">
+<div id="with-my-template" style="width: 100%; height: 180px;">
+  <div class="gcf-header-block">
+    <div class="gcf-title-block">
+      Rcent updates of
+      <span class="gcf-title">replaced with calendar name</span>
+    </div>
+  </div>
+  <div class="gcf-item-container-block">
+    <div class="gcf-item-block">
+      <div class="gcf-item-header-block">
+        <div class="gcf-item-title-block">
+          [<span class="gcf-item-date">00/00</span>]
+          <strong class="gcf-item-title">Item Title of each event</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $('#with-my-template').gCalFlow({
+    calid: 'floss4science@gmail.com',
+    date_formatter: function (date, allday_p) {
+      function pad(n) { return n < 10 ? "0"+n : n; }
+      return pad(date.getMonth()+1) + "/" + pad(date.getDate());
+    }
+  });
+</script>
+</textarea>
+
+<div id="template-sample-container">hoge</div>
+<script type="text/javascript">
+var $ = jQuery;
+$(function(){
+  $('#template-sample-container').html(
+    $('#template-sample-script')[0].value
+  );
+});
+</script>
+
+<h3 style="clear: both;">Copyright</h3>
+
+<h4>License</h4>
+
+<p><a href="http://www.opensource.org/licenses/MIT">
+MIT License
+</a></p>
+
+<h4>Author</h4>
+
+<p><a href="http://github.com/sugi">
+Tatsuki Sugiura
+</a></p>
+
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/sugi">sugi</a></p>
