@@ -19,7 +19,7 @@ base_obj =
   template: $("""<div class="gCalFlow">
       <div class="gcf-header-block">
         <div class="gcf-title-block">
-          Updates of <span class="gcf-title"></span>
+          <span class="gcf-title"></span> Updates
         </div>
       </div>
       <div class="gcf-item-container-block">
@@ -45,6 +45,8 @@ base_obj =
   opts: {
     maxitem: 15
     calid: null
+    auto_scroll: true
+    scroll_interval: 10 * 1000
     date_formatter: (d, allday_p) ->
       `if (allday_p) {` # why??????
       return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()}"
@@ -122,6 +124,26 @@ base_obj =
     ic.html(items)
 
     this.target.html(t.html())
+    scroll_container = this.target.find('.gcf-item-container-block')
+    scroll_children = scroll_container.find(".gcf-item-block")
+    log.debug "scroll container:", scroll_container
+    `if (this.opts.auto_scroll && scroll_container.size() > 0 && scroll_children.size() > 1) { ` # ???????? sigh.....
+    state = {idx: 0}
+    scroller = ->
+      log.debug "current scroll position:", scroll_container.scrollTop()
+      log.debug "scroll capacity:", scroll_container[0].scrollHeight - scroll_container[0].clientHeight
+      `if (scroll_container.scrollTop() >= scroll_container[0].scrollHeight - scroll_container[0].clientHeight) {`
+      log.debug "scroll to top"
+      state.idx = 0
+      scroll_container.animate {scrollTop: scroll_children[0].offsetTop}
+      `} else {`
+      scroll_to = scroll_children[state.idx].offsetTop
+      log.debug "scroll to #{scroll_to}px"
+      scroll_container.animate {scrollTop: scroll_to}
+      state.idx += 1
+      `}`
+    scroll_timer = setInterval scroller, this.opts.scroll_interval
+    `}`
 
 createInstance = (target, opts) ->
   F = ->
@@ -163,6 +185,6 @@ $.fn.gCalFlow = (method) ->
     this.each ->
       methods[method].apply $(this), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
-    "0.1.0"
+    "0.2.0"
   else
     $.error "Method #{method} dose not exist on jQuery.gCalFlow"

@@ -34,11 +34,13 @@
     position: absolute;
   }
   .gcf-item-container-block {
+    position: relative;
     overflow: hidden;
     overflow-y: auto;
     height: 90%;
   }
   .gcf-item-block {
+    position: relative;
     overflow: hidden;
     border-bottom: 1px dashed #ccc;
     padding: 2px;

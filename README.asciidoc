@@ -11,22 +11,8 @@ This plugin provides a widget shows updates of your
 google calendar with configurable options and your
 HTML desgin template.
 
-
-Options
--------
-
-|=================================
-|name | type | default
-|calid| string | (none, required!)
-|maxitem| int | 15
-|date_formatter| function |
-|=================================
-
-
-Examples
---------
-
-See examples.html
+See http://sugi.github.com/jquery-gcal-flow/ for details
+or check examples.html .
 
 License
 -------
