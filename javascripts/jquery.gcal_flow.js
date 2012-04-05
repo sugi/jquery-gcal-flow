@@ -28,6 +28,8 @@
     opts: {
       maxitem: 15,
       calid: null,
+      auto_scroll: true,
+      scroll_interval: 10 * 1000,
       date_formatter: function(d, allday_p) {
         if (allday_p) {;        return "" + (d.getFullYear()) + "-" + (pad_zero(d.getMonth() + 1)) + "-" + (pad_zero(d.getDate()));
         } else {;
@@ -75,7 +77,7 @@
       }
     },
     render_data: function(data) {
-      var ci, ent, feed, ic, idate, it, items, st, t, titlelink, _i, _len, _ref, _ref2;
+      var ci, ent, feed, ic, idate, it, items, scroll_children, scroll_container, scroll_timer, scroller, st, state, t, titlelink, _i, _len, _ref, _ref2;
       log.debug("start rendering for data:", data);
       feed = data.feed;
       t = this.template.clone();
@@ -113,7 +115,35 @@
       ic = t.find('.gcf-item-container-block');
       log.debug("item container element:", ic);
       ic.html(items);
-      return this.target.html(t.html());
+      this.target.html(t.html());
+      scroll_container = this.target.find('.gcf-item-container-block');
+      scroll_children = scroll_container.find(".gcf-item-block");
+      log.debug("scroll container:", scroll_container);
+      if (this.opts.auto_scroll && scroll_container.size() > 0 && scroll_children.size() > 1) { ;
+      state = {
+        idx: 0
+      };
+      scroller = function() {
+        var scroll_to;
+        log.debug("current scroll position:", scroll_container.scrollTop());
+        log.debug("scroll capacity:", scroll_container[0].scrollHeight - scroll_container[0].clientHeight);
+        if (scroll_container.scrollTop() >= scroll_container[0].scrollHeight - scroll_container[0].clientHeight) {;
+        log.debug("scroll to top");
+        state.idx = 0;
+        scroll_container.animate({
+          scrollTop: scroll_children[0].offsetTop
+        });
+        } else {;
+        scroll_to = scroll_children[state.idx].offsetTop;
+        log.debug("scroll to " + scroll_to + "px");
+        scroll_container.animate({
+          scrollTop: scroll_to
+        });
+        state.idx += 1;
+        return };
+      };
+      scroll_timer = setInterval(scroller, this.opts.scroll_interval);
+      return };
     }
   };
 
@@ -173,7 +203,7 @@
         return methods[method].apply($(this), Array.prototype.slice.call(orig_args, 1));
       });
     } else if (method === 'version') {
-      return "0.1.0";
+      return "0.2.0";
     } else {
       return $.error("Method " + method + " dose not exist on jQuery.gCalFlow");
     }
