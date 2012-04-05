@@ -19,7 +19,7 @@ base_obj =
   template: $("""<div class="gCalFlow">
       <div class="gcf-header-block">
         <div class="gcf-title-block">
-          <span class="gcf-title"></span> Updates
+          <span class="gcf-title"></span>
         </div>
       </div>
       <div class="gcf-item-container-block">
@@ -45,6 +45,8 @@ base_obj =
   opts: {
     maxitem: 15
     calid: null
+    mode: 'upcoming'
+    feed_url: null
     auto_scroll: true
     scroll_interval: 10 * 1000
     date_formatter: (d, allday_p) ->
@@ -62,11 +64,16 @@ base_obj =
     log.debug "new options:", this.opts
 
   gcal_url: ->
-    if !this.opts.calid
-      log.error "option calid is missing. abort url generation"
-      this.target.text("Error: You need to set 'calid' option.")
-      throw "gCalFlow: calid missing"
-    "https://www.google.com/calendar/feeds/#{this.opts.calid}/public/full?alt=json-in-script&max-results=#{this.opts.maxitem}"
+    if !this.opts.calid && !this.opts.feed_url
+      log.error "Option calid and feed_url are missing. Abort URL generation"
+      this.target.text("Error: You need to set 'calid' or 'feed_url' option.")
+      throw "gCalFlow: calid and feed_url missing"
+    if this.opts.feed_url
+      this.opts.feed_url
+    else if this.opts.mode == 'updates'
+      "https://www.google.com/calendar/feeds/#{this.opts.calid}/public/full?alt=json-in-script&max-results=#{this.opts.maxitem}&orderby=lastmodified&sortorder=descending"
+    else
+      "https://www.google.com/calendar/feeds/#{this.opts.calid}/public/full?alt=json-in-script&max-results=#{this.opts.maxitem}&orderby=starttime&futureevents=true&sortorder=ascending&singleevents=true"
 
   fetch: ->
     log.debug "Starting ajax call for #{this.gcal_url()}"
@@ -105,10 +112,10 @@ base_obj =
     log.debug "item block template:", it
     items = $()
     log.debug "render entries:", feed.entry
-    for ent in feed.entry
+    for ent in feed.entry[0..this.opts.maxitem]
       log.debug "formatting entry:", ent
       ci = it.clone()
-      `if (ent.gd$when) {` # hmmmmmmmmmmmm, why cannot I use normal if by syntax error????
+      `if (ent.gd$when) {` # hmmmmmmmmmmmm, why I get syntax error when use if in coffee syntax????
       st = ent.gd$when[0].startTime
       idate = this.opts.date_formatter this.parse_date(st), st.indexOf('T') < 0
       ci.find('.gcf-item-date').text idate
@@ -185,6 +192,6 @@ $.fn.gCalFlow = (method) ->
     this.each ->
       methods[method].apply $(this), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
-    "0.2.0"
+    "1.0.0"
   else
     $.error "Method #{method} dose not exist on jQuery.gCalFlow"
