@@ -24,10 +24,12 @@
 
   base_obj = {
     target: null,
-    template: $("<div class=\"gCalFlow\">\n  <div class=\"gcf-header-block\">\n    <div class=\"gcf-title-block\">\n      <span class=\"gcf-title\"></span> Updates\n    </div>\n  </div>\n  <div class=\"gcf-item-container-block\">\n    <div class=\"gcf-item-block\">\n      <div class=\"gcf-item-header-block\">\n        <div class=\"gcf-item-date-block\">\n          [<span class=\"gcf-item-date\"></span>]\n        </div>\n        <div class=\"gcf-item-title-block\">\n          <strong class=\"gcf-item-title\"></strong>\n        </div>\n      </div>\n      <div class=\"gcf-item-body-block\">\n        <div class=\"gcf-item-description\">\n        </div>\n      </div>\n    </div>\n  </div>\n  <div class=\"gcf-last-update-block\">\n    LastUpdate: <span class=\"gcf-last-update\"></span>\n  </div>\n</div>"),
+    template: $("<div class=\"gCalFlow\">\n  <div class=\"gcf-header-block\">\n    <div class=\"gcf-title-block\">\n      <span class=\"gcf-title\"></span>\n    </div>\n  </div>\n  <div class=\"gcf-item-container-block\">\n    <div class=\"gcf-item-block\">\n      <div class=\"gcf-item-header-block\">\n        <div class=\"gcf-item-date-block\">\n          [<span class=\"gcf-item-date\"></span>]\n        </div>\n        <div class=\"gcf-item-title-block\">\n          <strong class=\"gcf-item-title\"></strong>\n        </div>\n      </div>\n      <div class=\"gcf-item-body-block\">\n        <div class=\"gcf-item-description\">\n        </div>\n      </div>\n    </div>\n  </div>\n  <div class=\"gcf-last-update-block\">\n    LastUpdate: <span class=\"gcf-last-update\"></span>\n  </div>\n</div>"),
     opts: {
       maxitem: 15,
       calid: null,
+      mode: 'upcoming',
+      feed_url: null,
       auto_scroll: true,
       scroll_interval: 10 * 1000,
       date_formatter: function(d, allday_p) {
@@ -44,12 +46,18 @@
       return log.debug("new options:", this.opts);
     },
     gcal_url: function() {
-      if (!this.opts.calid) {
-        log.error("option calid is missing. abort url generation");
-        this.target.text("Error: You need to set 'calid' option.");
-        throw "gCalFlow: calid missing";
+      if (!this.opts.calid && !this.opts.feed_url) {
+        log.error("Option calid and feed_url are missing. Abort URL generation");
+        this.target.text("Error: You need to set 'calid' or 'feed_url' option.");
+        throw "gCalFlow: calid and feed_url missing";
       }
-      return "https://www.google.com/calendar/feeds/" + this.opts.calid + "/public/full?alt=json-in-script&max-results=" + this.opts.maxitem;
+      if (this.opts.feed_url) {
+        return this.opts.feed_url;
+      } else if (this.opts.mode === 'updates') {
+        return "https://www.google.com/calendar/feeds/" + this.opts.calid + "/public/full?alt=json-in-script&max-results=" + this.opts.maxitem + "&orderby=lastmodified&sortorder=descending";
+      } else {
+        return "https://www.google.com/calendar/feeds/" + this.opts.calid + "/public/full?alt=json-in-script&max-results=" + this.opts.maxitem + "&orderby=starttime&futureevents=true&sortorder=ascending&singleevents=true";
+      }
     },
     fetch: function() {
       var self, success_handler;
@@ -93,7 +101,7 @@
       log.debug("item block template:", it);
       items = $();
       log.debug("render entries:", feed.entry);
-      _ref2 = feed.entry;
+      _ref2 = feed.entry.slice(0, this.opts.maxitem + 1 || 9e9);
       for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
         ent = _ref2[_i];
         log.debug("formatting entry:", ent);
@@ -203,7 +211,7 @@
         return methods[method].apply($(this), Array.prototype.slice.call(orig_args, 1));
       });
     } else if (method === 'version') {
-      return "0.2.0";
+      return "1.0.0";
     } else {
       return $.error("Method " + method + " dose not exist on jQuery.gCalFlow");
     }

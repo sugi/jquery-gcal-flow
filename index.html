@@ -3,13 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>jQuery Google Calendar Flow plugin by sugi</title>
+    <title>gCalFlow: jQuery Google Calendar Event List Plugin</title>
     
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <link rel="stylesheet" href="stylesheets/jquery.gcal_flow.css">
     <style tyle="text/css">
-      .gCalFlow { font-size: 100%; }
+      .gCalFlow { font-size: 100%; font-weight: normal; }
+      .gCalFlow a { font-weight: 550; }
+      .gCalFlow .gcf-header-block a { font-weight: bold; }
       .gCalFlow .gcf-item-date-block { background-color: #eee; }
     </style>
     <script src="javascripts/scale.fix.js"></script>
@@ -19,7 +21,7 @@
       var $ = jQuery;
       $(function() {
         $('#gcf-simple').gCalFlow({
-          calid: 'floss4science@gmail.com'
+          calid: 'enhf7e3cad3afc2iir8qq2u0ds@group.calendar.google.com'
         });
       });
     </script>
@@ -32,11 +34,11 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>jQuery Google Calendar Flow plugin</h1>
-        <p>Show calendar updates on any website</p>
+        <h1>gCalFlow: jQuery Google Calendar Event List Plugin</h1>
+        <p>Show your event list on any website</p>
         <p class="view"><a href="https://github.com/sugi/jquery-gcal-flow">View the Project on GitHub <small>sugi/jquery-gcal-flow</small></a></p>
         <ul>
-          <li><a href="https://github.com/downloads/sugi/jquery-gcal-flow/jquery-gcal-flow-0.2.0.zip">Download <strong>StableZIP</strong></a></li>
+          <li><a href="https://github.com/downloads/sugi/jquery-gcal-flow/jquery-gcal-flow-1.0.0.zip">Download <strong>StableZIP</strong></a></li>
           <li><a href="https://github.com/sugi/jquery-gcal-flow/zipball/master">Download <strong>Source</strong></a></li>
           <li><a href="https://github.com/sugi/jquery-gcal-flow">Fork On <strong>GitHub</strong></a></li>
         </ul>
@@ -44,19 +46,23 @@
         <div id="gcf-simple" style="margin-right: 2em;"></div>
       </header>
       <section>
-        <h3>Put your calendar updates on any website</h3>
+        <h3>Put your calendar event listing on any website</h3>
 
         <p>
           jQuery Google Calendar Flow plugin provides a widget
-          to show list of recent updates of any calendar.
-          like the one on left column!
+          to show list of upcoming or recently updated events
+          of public google calendar with configurable options
+          and fully customizable HTML desgin template.
         </p>
 
         <p>In the simplest way, you need to specify just calendar ID.
-          Left sample is show by following code:</p>
-<pre><code>$('#gcf-simple').gCalFlow({
-  calid: 'floss4science@gmail.com'
-});
+          The sample on this page is showen by following code:</p>
+<pre><code>&lt;div id="#gcf-simple"&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+$(function() { $('#gcf-simple').gCalFlow({
+  calid: 'enhf7e3cad3afc2iir8qq2u0ds@group.calendar.google.com'
+});});
+&lt;/script&gt;
 </code></pre>
 
         <h3>Customization</h3>
@@ -67,7 +73,8 @@
 
         <h4>CSS classes</h4>
 
-        <p>This plugin in uses following classes in default template. You can override with your design. Or, use your template to change design completely.<p>
+        <p>This plugin in uses following classes in default template. You can write CSS to override with your design.</p>
+        <p>If you need more complex change, use template.<p>
         </p>
 <pre><code>.gCalFlow
   + .gcf-header-block
@@ -92,34 +99,52 @@
 
 <table border="1">
 <tr>
-<th>name</th>
-<th>type</th>
-<th>default</th>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Note</th>
 </tr>
 <tr>
 <td>calid</td>
 <td>string</td>
-<td>(none, required!)</td>
+<td>(none)</td>
+<td><strong>required</strong> (if feed_url is missing)</td>
+</tr>
+<tr>
+<td>mode</td>
+<td>string</td>
+<td>'upcoming'</td>
+<td>'upcoming' for upcoming evnets, or 'updates' for events ordered by last modified.</td>
+</tr>
+<tr>
+<td>feed_url</td>
+<td>string</td>
+<td>(none)</td>
+<td>Any Atom feed URL compat with google's. If this options is specified, 'calid' and 'mode' are ignored.</td>
 </tr>
 <tr>
 <td>maxitem</td>
 <td>int</td>
 <td>15</td>
+<td>Limit for max number of events. You can set any number, but Google may ignore large number.</td>
 </tr>
 <tr>
 <td>date_formatter</td>
 <td>function</td>
-<td>ISO date formatter. This function will be called with two arguments: Date instance and "all day flag".</td>
+<td>ISO style formatter</td>
+<td>This function will be called with two arguments: Date instance and "all day flag".</td>
 </tr>
 <tr>
 <td>auto_scroll</td>
 <td>boolean</td>
 <td>true</td>
+<td></td>
 </tr>
 <tr>
 <td>scroll_interval</td>
-<td>milliseconds</td>
+<td>int</td>
 <td>10 * 1000</td>
+<td>in milliseconds</td>
 </tr>
 </table> 
 
@@ -138,7 +163,7 @@ You can use any design by appling your template.
 <table border="1">
 <tr>
 <th>Class name</th>
-<th>Change value to</th>
+<th>Change text to...</th>
 <th>Note</th>
 </tr>
 <tr>
@@ -178,13 +203,13 @@ You can use any design by appling your template.
 </tr>
 </table>
 
-<p>For example, following template shows only title of calenar updates.</p>
+<p>Example to use template and js options:</p>
 
 <textarea id="template-sample-script" style="width:100%; height: 14em; border: solid 1px #ccc;" readonly="true">
 <div id="with-my-template" style="width: 100%; height: 180px;">
   <div class="gcf-header-block">
     <div class="gcf-title-block">
-      Rcent updates of
+      Recent updates on
       <span class="gcf-title">replaced with calendar name</span>
     </div>
   </div>
@@ -201,7 +226,9 @@ You can use any design by appling your template.
 </div>
 <script type="text/javascript">
   $('#with-my-template').gCalFlow({
-    calid: 'floss4science@gmail.com',
+    calid: 'enhf7e3cad3afc2iir8qq2u0ds@group.calendar.google.com',
+    mode: 'updates',
+    maxitem: 20,
     date_formatter: function (date, allday_p) {
       function pad(n) { return n < 10 ? "0"+n : n; }
       return pad(date.getMonth()+1) + "/" + pad(date.getDate());
