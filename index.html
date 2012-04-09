@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <link rel="stylesheet" href="stylesheets/jquery.gcal_flow.css">
     <style tyle="text/css">
-      .gCalFlow { font-size: 100%; font-weight: normal; }
+      .gCalFlow { font-size: 100%; font-weight: normal; line-height: 1.2; margin-bottom: 2em;}
       .gCalFlow a { font-weight: 550; }
       .gCalFlow .gcf-header-block a { font-weight: bold; }
       .gCalFlow .gcf-item-date-block { background-color: #eee; }
@@ -158,6 +158,37 @@ You can use any design by appling your template.
 </p>
 <p>Note: <em>To use defualt template, Keep empty target element (has no child node)!</em></p>
 
+<h5>Built-in template</h5>
+
+<p>Here is built-in default. It's a good start point to modifiy design.</p>
+<pre><code>&lt;div class="gcf-header-block"&gt;
+  &lt;div class="gcf-title-block"&gt;
+    &lt;span class="gcf-title"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="gcf-item-container-block"&gt;
+  &lt;div class="gcf-item-block"&gt;
+    &lt;div class="gcf-item-header-block"&gt;
+      &lt;div class="gcf-item-date-block"&gt;
+        [&lt;span class="gcf-item-date"&gt;&lt;/span&gt;]
+      &lt;/div&gt;
+      &lt;div class="gcf-item-title-block"&gt;
+        &lt;strong class="gcf-item-title"&gt;&lt;/strong&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="gcf-item-body-block"&gt;
+      &lt;div class="gcf-item-description"&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="gcf-last-update-block"&gt;
+  LastUpdate: &lt;span class="gcf-last-update"&gt;&lt;/span&gt;
+&lt;/div&gt;
+</code></pre>
+
+<h5>Variable classes</h5>
+
 <p>Texts of elements with follwoing classname will be replaced:</P>
 
 <table border="1">
@@ -203,7 +234,9 @@ You can use any design by appling your template.
 </tr>
 </table>
 
-<h3>Example to use template and js options</h3>
+<h3>Examples</h3>
+
+<h4>Title only updates list (template + js options)</h3>
 
 Code:<br>
 <textarea id="template-sample-script" style="width:100%; height: 14em; border: solid 1px #ccc;" readonly="true">
@@ -240,7 +273,7 @@ Code:<br>
 </textarea>
 
 Rendered Result:<br>
-<div id="template-sample-container">[Result]</div>
+<div id="template-sample-container"></div>
 <script type="text/javascript">
 var $ = jQuery;
 $(function(){
@@ -250,7 +283,70 @@ $(function(){
 });
 </script>
 
-<h3 style="clear: both;">Copyright</h3>
+<h4>Ticker (template + js + CSS)</h4>
+Code:<br>
+<textarea id="ticker-sample-script" style="width: 100%" rows="10">
+<style type="text/css">
+#gcf-ticker .gcf-header-block {
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  float: left;
+}
+#gcf-ticker .gcf-item-container-block {
+  margin-top: 0.2em;
+} 
+#gcf-ticker .gcf-item-block .gcf-item-description {
+  padding-left: 1em;
+  color: #888;
+  font-size: 78%;
+}
+#gcf-ticker .gcf-item-description:before { content: " -- "; color: #aaa; }
+</style>
+<div id="gcf-ticker" style="width: 100%; height: 1.4em;">
+  <div class="gcf-header-block">
+    <div class="gcf-title-block">
+        Updates:
+    </div>
+  </div>
+  <div class="gcf-item-container-block">
+    <div class="gcf-item-block">
+      <div class="gcf-item-header-block">
+        <div class="gcf-item-title-block">
+          (<span class="gcf-item-date">20/12</span>)
+          <span class="gcf-item-title">Item Title of Your event</span>
+           <span class="gcf-item-description"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+    $('#gcf-ticker').gCalFlow({
+      calid: 'enhf7e3cad3afc2iir8qq2u0ds@group.calendar.google.com',
+      maxitem: 25,
+      scroll_interval: 5 * 1000,
+      date_formatter: function (date, allday_p) {
+        function pad(n) { return n < 10 ? "0"+n : n; }
+        return pad(date.getMonth()+1) + "/" + pad(date.getDate()) + "/" + date.getFullYear().toString().substr(-2);
+      }
+    });
+</script>
+</textarea>
+
+Rendered Result:<br>
+<div id="ticker-sample-container">[Result]</div>
+<script type="text/javascript">
+var $ = jQuery;
+$(function(){
+  $('#ticker-sample-container').html(
+    $('#ticker-sample-script')[0].value
+  );
+});
+</script>
+
+<br style="clear:both;">
+<h3>Copyright</h3>
 
 <h4>License</h4>
 
