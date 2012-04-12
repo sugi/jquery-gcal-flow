@@ -49,6 +49,11 @@ base_obj =
     feed_url: null
     auto_scroll: true
     scroll_interval: 10 * 1000
+    link_title: true
+    link_item_title: true
+    link_item_description: false
+    link_target: '_blank'
+    callback: null
     date_formatter: (d, allday_p) ->
       if allday_p
         return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()}"
@@ -102,7 +107,11 @@ base_obj =
     t = this.template.clone()
 
     titlelink = this.opts.titlelink ? "http://www.google.com/calendar/embed?src=#{this.opts.calid}"
-    t.find('.gcf-title').html $("<a />").attr({target: '_blank', href: titlelink}).text feed.title.$t
+    if this.opts.link_title
+      t.find('.gcf-title').html $("<a />").attr({target: this.opts.link_target, href: titlelink}).text feed.title.$t
+    else
+      t.find('.gcf-title').text feed.title.$t
+    t.find('.gcf-link').attr {target: this.opts.link_target, href: titlelink}
     t.find('.gcf-last-update').text this.opts.date_formatter this.parse_date feed.updated.$t
 
     it = t.find('.gcf-item-block')
@@ -116,10 +125,23 @@ base_obj =
       ci = it.clone()
       if ent.gd$when
         st = ent.gd$when[0].startTime
-        idate = this.opts.date_formatter this.parse_date(st), st.indexOf('T') < 0
-        ci.find('.gcf-item-date').text idate
-      ci.find('.gcf-item-title').html $('<a />').attr({target: '_blank', href: ent.link[0].href}).text ent.title.$t
-      ci.find('.gcf-item-description').text ent.content.$t
+        stf = this.opts.date_formatter this.parse_date(st), st.indexOf('T') < 0
+        ci.find('.gcf-item-date').text stf
+        ci.find('.gcf-item-start-date').text stf
+        et = ent.gd$when[0].endTime
+        etf = this.opts.date_formatter this.parse_date(et), et.indexOf('T') < 0
+        ci.find('.gcf-item-end-date').text etf
+      ci.find('.gcf-item-update-date').text this.opts.date_formatter this.parse_date(ent.updated.$t), false
+      link = $('<a />').attr {target: this.opts.link_target, href: ent.link[0].href}
+      if this.opts.link_item_title
+        ci.find('.gcf-item-title').html link.clone().text ent.title.$t
+      else
+        ci.find('.gcf-item-title').text ent.title.$t
+      if this.opts.link_item_description
+        ci.find('.gcf-item-description').html link.clone().text ent.content.$t
+      else
+        ci.find('.gcf-item-description').text ent.content.$t
+      ci.find('.gcf-item-link').attr {href: ent.link[0].href}
       log.debug "formatted item entry:", ci[0]
       items.push ci[0]
 
@@ -130,6 +152,7 @@ base_obj =
 
     this.target.html(t.html())
     this.bind_scroll()
+    this.opts.callback.apply(this.target) if this.opts.callback
 
   bind_scroll: ->
     scroll_container = this.target.find('.gcf-item-container-block')
