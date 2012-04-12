@@ -1,5 +1,5 @@
 (function() {
-  var $, base_obj, createInstance, log, methods, pad_zero;
+  var $, gCalFlow, log, methods, pad_zero;
 
   $ = jQuery;
 
@@ -22,30 +22,51 @@
     return ret + num;
   };
 
-  base_obj = {
-    target: null,
-    template: $("<div class=\"gCalFlow\">\n  <div class=\"gcf-header-block\">\n    <div class=\"gcf-title-block\">\n      <span class=\"gcf-title\"></span>\n    </div>\n  </div>\n  <div class=\"gcf-item-container-block\">\n    <div class=\"gcf-item-block\">\n      <div class=\"gcf-item-header-block\">\n        <div class=\"gcf-item-date-block\">\n          [<span class=\"gcf-item-date\"></span>]\n        </div>\n        <div class=\"gcf-item-title-block\">\n          <strong class=\"gcf-item-title\"></strong>\n        </div>\n      </div>\n      <div class=\"gcf-item-body-block\">\n        <div class=\"gcf-item-description\">\n        </div>\n      </div>\n    </div>\n  </div>\n  <div class=\"gcf-last-update-block\">\n    LastUpdate: <span class=\"gcf-last-update\"></span>\n  </div>\n</div>"),
-    opts: {
+  gCalFlow = (function() {
+
+    gCalFlow.prototype.target = null;
+
+    gCalFlow.prototype.template = $("<div class=\"gCalFlow\">\n  <div class=\"gcf-header-block\">\n    <div class=\"gcf-title-block\">\n      <span class=\"gcf-title\"></span>\n    </div>\n  </div>\n  <div class=\"gcf-item-container-block\">\n    <div class=\"gcf-item-block\">\n      <div class=\"gcf-item-header-block\">\n        <div class=\"gcf-item-date-block\">\n          [<span class=\"gcf-item-date\"></span>]\n        </div>\n        <div class=\"gcf-item-title-block\">\n          <strong class=\"gcf-item-title\"></strong>\n        </div>\n      </div>\n      <div class=\"gcf-item-body-block\">\n        <div class=\"gcf-item-description\">\n        </div>\n      </div>\n    </div>\n  </div>\n  <div class=\"gcf-last-update-block\">\n    LastUpdate: <span class=\"gcf-last-update\"></span>\n  </div>\n</div>");
+
+    gCalFlow.prototype.opts = {
       maxitem: 15,
       calid: null,
       mode: 'upcoming',
       feed_url: null,
       auto_scroll: true,
       scroll_interval: 10 * 1000,
+      link_title: true,
+      link_item_title: true,
+      link_item_description: false,
+      link_target: '_blank',
+      callback: null,
       date_formatter: function(d, allday_p) {
-        if (allday_p) {;        return "" + (d.getFullYear()) + "-" + (pad_zero(d.getMonth() + 1)) + "-" + (pad_zero(d.getDate()));
-        } else {;
-        return "" + (d.getFullYear()) + "-" + (pad_zero(d.getMonth() + 1)) + "-" + (pad_zero(d.getDate())) + " " + (pad_zero(d.getHours())) + ":" + (pad_zero(d.getMinutes()));
-        return };
+        if (allday_p) {
+          return "" + (d.getFullYear()) + "-" + (pad_zero(d.getMonth() + 1)) + "-" + (pad_zero(d.getDate()));
+        } else {
+          return "" + (d.getFullYear()) + "-" + (pad_zero(d.getMonth() + 1)) + "-" + (pad_zero(d.getDate())) + " " + (pad_zero(d.getHours())) + ":" + (pad_zero(d.getMinutes()));
+        }
       }
-    },
-    update_opts: function(new_opts) {
+    };
+
+    function gCalFlow(target, opts) {
+      this.target = target;
+      target.addClass('gCalFlow');
+      if (target.children().size() > 0) {
+        log.debug("Target node has children, use target element as template.");
+        this.template = target;
+      }
+      this.update_opts(opts);
+    }
+
+    gCalFlow.prototype.update_opts = function(new_opts) {
       log.debug("update_opts was called");
       log.debug("old options:", this.opts);
       this.opts = $.extend({}, this.opts, new_opts);
       return log.debug("new options:", this.opts);
-    },
-    gcal_url: function() {
+    };
+
+    gCalFlow.prototype.gcal_url = function() {
       if (!this.opts.calid && !this.opts.feed_url) {
         log.error("Option calid and feed_url are missing. Abort URL generation");
         this.target.text("Error: You need to set 'calid' or 'feed_url' option.");
@@ -58,8 +79,9 @@
       } else {
         return "https://www.google.com/calendar/feeds/" + this.opts.calid + "/public/full?alt=json-in-script&max-results=" + this.opts.maxitem + "&orderby=starttime&futureevents=true&sortorder=ascending&singleevents=true";
       }
-    },
-    fetch: function() {
+    };
+
+    gCalFlow.prototype.fetch = function() {
       var self, success_handler;
       log.debug("Starting ajax call for " + (this.gcal_url()));
       self = this;
@@ -72,8 +94,9 @@
         dataType: "jsonp",
         url: this.gcal_url()
       });
-    },
-    parse_date: function(dstr) {
+    };
+
+    gCalFlow.prototype.parse_date = function(dstr) {
       var d, di, dinfo;
       di = Date.parse(dstr);
       if (!di) {
@@ -83,17 +106,26 @@
       } else {
         return new Date(di);
       }
-    },
-    render_data: function(data) {
-      var ci, ent, feed, ic, idate, it, items, scroll_children, scroll_container, scroll_timer, scroller, st, state, t, titlelink, _i, _len, _ref, _ref2;
+    };
+
+    gCalFlow.prototype.render_data = function(data) {
+      var ci, ent, et, etf, feed, ic, it, items, link, st, stf, t, titlelink, _i, _len, _ref, _ref2;
       log.debug("start rendering for data:", data);
       feed = data.feed;
       t = this.template.clone();
       titlelink = (_ref = this.opts.titlelink) != null ? _ref : "http://www.google.com/calendar/embed?src=" + this.opts.calid;
-      t.find('.gcf-title').html($("<a />").attr({
-        target: '_blank',
+      if (this.opts.link_title) {
+        t.find('.gcf-title').html($("<a />").attr({
+          target: this.opts.link_target,
+          href: titlelink
+        }).text(feed.title.$t));
+      } else {
+        t.find('.gcf-title').text(feed.title.$t);
+      }
+      t.find('.gcf-link').attr({
+        target: this.opts.link_target,
         href: titlelink
-      }).text(feed.title.$t));
+      });
       t.find('.gcf-last-update').text(this.opts.date_formatter(this.parse_date(feed.updated.$t)));
       it = t.find('.gcf-item-block');
       it.detach();
@@ -106,16 +138,33 @@
         ent = _ref2[_i];
         log.debug("formatting entry:", ent);
         ci = it.clone();
-        if (ent.gd$when) {;
-        st = ent.gd$when[0].startTime;
-        idate = this.opts.date_formatter(this.parse_date(st), st.indexOf('T') < 0);
-        ci.find('.gcf-item-date').text(idate);
-        };
-        ci.find('.gcf-item-title').html($('<a />').attr({
-          target: '_blank',
+        if (ent.gd$when) {
+          st = ent.gd$when[0].startTime;
+          stf = this.opts.date_formatter(this.parse_date(st), st.indexOf('T') < 0);
+          ci.find('.gcf-item-date').text(stf);
+          ci.find('.gcf-item-start-date').text(stf);
+          et = ent.gd$when[0].endTime;
+          etf = this.opts.date_formatter(this.parse_date(et), et.indexOf('T') < 0);
+          ci.find('.gcf-item-end-date').text(etf);
+        }
+        ci.find('.gcf-item-update-date').text(this.opts.date_formatter(this.parse_date(ent.updated.$t), false));
+        link = $('<a />').attr({
+          target: this.opts.link_target,
           href: ent.link[0].href
-        }).text(ent.title.$t));
-        ci.find('.gcf-item-description').text(ent.content.$t);
+        });
+        if (this.opts.link_item_title) {
+          ci.find('.gcf-item-title').html(link.clone().text(ent.title.$t));
+        } else {
+          ci.find('.gcf-item-title').text(ent.title.$t);
+        }
+        if (this.opts.link_item_description) {
+          ci.find('.gcf-item-description').html(link.clone().text(ent.content.$t));
+        } else {
+          ci.find('.gcf-item-description').text(ent.content.$t);
+        }
+        ci.find('.gcf-item-link').attr({
+          href: ent.link[0].href
+        });
         log.debug("formatted item entry:", ci[0]);
         items.push(ci[0]);
       }
@@ -124,10 +173,18 @@
       log.debug("item container element:", ic);
       ic.html(items);
       this.target.html(t.html());
+      this.bind_scroll();
+      if (this.opts.callback) return this.opts.callback.apply(this.target);
+    };
+
+    gCalFlow.prototype.bind_scroll = function() {
+      var scroll_children, scroll_container, scroll_timer, scroller, state;
       scroll_container = this.target.find('.gcf-item-container-block');
       scroll_children = scroll_container.find(".gcf-item-block");
       log.debug("scroll container:", scroll_container);
-      if (this.opts.auto_scroll && scroll_container.size() > 0 && scroll_children.size() > 1) { ;
+      if (!this.opts.auto_scroll || scroll_container.size() < 1 || scroll_children.size() < 2) {
+        return;
+      }
       state = {
         idx: 0
       };
@@ -135,40 +192,27 @@
         var scroll_to;
         log.debug("current scroll position:", scroll_container.scrollTop());
         log.debug("scroll capacity:", scroll_container[0].scrollHeight - scroll_container[0].clientHeight);
-        if (scroll_container.scrollTop() >= scroll_container[0].scrollHeight - scroll_container[0].clientHeight) {;
-        log.debug("scroll to top");
-        state.idx = 0;
-        scroll_container.animate({
-          scrollTop: scroll_children[0].offsetTop
-        });
-        } else {;
-        scroll_to = scroll_children[state.idx].offsetTop;
-        log.debug("scroll to " + scroll_to + "px");
-        scroll_container.animate({
-          scrollTop: scroll_to
-        });
-        state.idx += 1;
-        return };
+        if (typeof scroll_children[state.idx] === 'undefined' || scroll_container.scrollTop() >= scroll_container[0].scrollHeight - scroll_container[0].clientHeight) {
+          log.debug("scroll to top");
+          state.idx = 0;
+          return scroll_container.animate({
+            scrollTop: scroll_children[0].offsetTop
+          });
+        } else {
+          scroll_to = scroll_children[state.idx].offsetTop;
+          log.debug("scroll to " + scroll_to + "px");
+          scroll_container.animate({
+            scrollTop: scroll_to
+          });
+          return state.idx += 1;
+        }
       };
-      scroll_timer = setInterval(scroller, this.opts.scroll_interval);
-      return };
-    }
-  };
+      return scroll_timer = setInterval(scroller, this.opts.scroll_interval);
+    };
 
-  createInstance = function(target, opts) {
-    var F, obj;
-    F = function() {};
-    F.prototype = base_obj;
-    obj = new F();
-    obj.target = target;
-    target.addClass('gCalFlow');
-    if (target.children().size() > 0) {
-      log.debug("Target node has children, use target element as template.");
-      obj.template = target;
-    }
-    obj.update_opts(opts);
-    return obj;
-  };
+    return gCalFlow;
+
+  })();
 
   methods = {
     init: function(opts) {
@@ -178,7 +222,7 @@
       if (!data) {
         return this.data('gCalFlow', {
           target: this,
-          obj: createInstance(this, opts)
+          obj: new gCalFlow(this, opts)
         });
       }
     },
@@ -211,7 +255,7 @@
         return methods[method].apply($(this), Array.prototype.slice.call(orig_args, 1));
       });
     } else if (method === 'version') {
-      return "1.0.0";
+      return "1.1.0";
     } else {
       return $.error("Method " + method + " dose not exist on jQuery.gCalFlow");
     }

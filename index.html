@@ -38,7 +38,7 @@
         <p>Show your event list on any website</p>
         <p class="view"><a href="https://github.com/sugi/jquery-gcal-flow">View the Project on GitHub <small>sugi/jquery-gcal-flow</small></a></p>
         <ul>
-          <li><a href="https://github.com/downloads/sugi/jquery-gcal-flow/jquery-gcal-flow-1.0.0.zip">Download <strong>StableZIP</strong></a></li>
+          <li><a href="https://github.com/downloads/sugi/jquery-gcal-flow/jquery-gcal-flow-1.1.0.zip">Download <strong>StableZIP</strong></a></li>
           <li><a href="https://github.com/sugi/jquery-gcal-flow/zipball/master">Download <strong>Source</strong></a></li>
           <li><a href="https://github.com/sugi/jquery-gcal-flow">Fork On <strong>GitHub</strong></a></li>
         </ul>
@@ -146,6 +146,36 @@ $(function() { $('#gcf-simple').gCalFlow({
 <td>10 * 1000</td>
 <td>in milliseconds</td>
 </tr>
+<tr>
+<td>link_title</td>
+<td>boolean</td>
+<td>true</td>
+<td>enable link on calenar title</td>
+</tr>
+<tr>
+<td>link_item_title</td>
+<td>boolean</td>
+<td>true</td>
+<td>enable link on item title</td>
+</tr>
+<tr>
+<td>link_item_description</td>
+<td>boolean</td>
+<td>false</td>
+<td>enable link on item description</td>
+</tr>
+<tr>
+<td>link_target</td>
+<td>string</td>
+<td>'_blank'</td>
+<td>target attribute of auto-genrated links</td>
+</tr>
+<tr>
+<td>callback</td>
+<td>function</td>
+<td>null</td>
+<td>callback function when finish rendering. In this function, a jQuery object contains target node is assigned to 'this'. This is usefull to chain other jQuery method or plugin (e.g. callback: function() { this.effect("highlight") })</td>
+</tr>
 </table> 
 
 
@@ -208,9 +238,14 @@ You can use any design by appling your template.
 <td></td>
 </tr>
 <tr>
+<td>gcf-link</td>
+<td>(text is not replaced)</td>
+<td>This class will be set "href" attribute to calendar URL. (not used in default)</td>
+</tr>
+<tr>
 <td>gcf-item-container-block</td>
 <td></td>
-<td>This class item container. Elements with gcf-item-block class will be appended for each event item. If template dose NOT have this element, no items will be shown.</td>
+<td>This class item container. The content of this node is cleared, then gcf-item-block element will be appended for each event item. If template dose NOT have this element, no items will be shown.</td>
 </tr>
 <tr>
 <td>gcf-item-block</td>
@@ -220,17 +255,32 @@ You can use any design by appling your template.
 <tr>
 <td>gcf-item-date</td>
 <td>Item start date</td>
-<td>Must be a child of gcf-item-block.</td>
+<td>Must be a decendant of gcf-item-block.</td>
 </tr>
 <tr>
-<td>gcf-item-title</td>
+<td>gcf-item-title, gcf-item-start-date</td>
 <td>Item title</td>
-<td>Must be a child of gcf-item-block.</td>
+<td>Must be a decendant of gcf-item-block.</td>
 </tr>
 <tr>
 <td>gcf-item-description</td>
 <td>Item description text</td>
-<td>Must be a child of gcf-item-block.</td>
+<td>Must be a decendant of gcf-item-block.</td>
+</tr>
+<tr>
+<td>gcf-item-link</td>
+<td>(text is not replaced)</td>
+<td>Must be a decendant of gcf-item-block. This class will be set "href" attribute to item URL. (not used in default)</td>
+</tr>
+<tr>
+<td>gcf-item-end-date</td>
+<td>Item end date</td>
+<td>Must be a decendant of gcf-item-block. (not used in default)</td>
+</tr>
+<tr>
+<td>gcf-item-update-date</td>
+<td>Item update date</td>
+<td>Must be a decendant of gcf-item-block. (not used in default)</td>
 </tr>
 </table>
 
