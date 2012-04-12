@@ -139,7 +139,7 @@ base_obj =
     scroller = ->
       log.debug "current scroll position:", scroll_container.scrollTop()
       log.debug "scroll capacity:", scroll_container[0].scrollHeight - scroll_container[0].clientHeight
-      `if (scroll_container.scrollTop() >= scroll_container[0].scrollHeight - scroll_container[0].clientHeight) {`
+      `if (typeof scroll_children[state.idx] === 'undefined' || scroll_container.scrollTop() >= scroll_container[0].scrollHeight - scroll_container[0].clientHeight) {`
       log.debug "scroll to top"
       state.idx = 0
       scroll_container.animate {scrollTop: scroll_children[0].offsetTop}
@@ -192,6 +192,6 @@ $.fn.gCalFlow = (method) ->
     this.each ->
       methods[method].apply $(this), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
-    "1.0.0"
+    "1.0.1"
   else
     $.error "Method #{method} dose not exist on jQuery.gCalFlow"
