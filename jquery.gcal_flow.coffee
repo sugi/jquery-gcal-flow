@@ -50,11 +50,10 @@ base_obj =
     auto_scroll: true
     scroll_interval: 10 * 1000
     date_formatter: (d, allday_p) ->
-      `if (allday_p) {` # why??????
-      return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()}"
-      `} else {`
-      return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()} #{pad_zero d.getHours()}:#{pad_zero d.getMinutes()}"
-      `}`
+      if allday_p
+        return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()}"
+      else
+        return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()} #{pad_zero d.getHours()}:#{pad_zero d.getMinutes()}"
   }
 
   update_opts: (new_opts) ->
@@ -115,11 +114,10 @@ base_obj =
     for ent in feed.entry[0..this.opts.maxitem]
       log.debug "formatting entry:", ent
       ci = it.clone()
-      `if (ent.gd$when) {` # hmmmmmmmmmmmm, why I get syntax error when use if in coffee syntax????
-      st = ent.gd$when[0].startTime
-      idate = this.opts.date_formatter this.parse_date(st), st.indexOf('T') < 0
-      ci.find('.gcf-item-date').text idate
-      `}`
+      if ent.gd$when
+        st = ent.gd$when[0].startTime
+        idate = this.opts.date_formatter this.parse_date(st), st.indexOf('T') < 0
+        ci.find('.gcf-item-date').text idate
       ci.find('.gcf-item-title').html $('<a />').attr({target: '_blank', href: ent.link[0].href}).text ent.title.$t
       ci.find('.gcf-item-description').text ent.content.$t
       log.debug "formatted item entry:", ci[0]
@@ -131,26 +129,28 @@ base_obj =
     ic.html(items)
 
     this.target.html(t.html())
+    this.bind_scroll()
+
+  bind_scroll: ->
     scroll_container = this.target.find('.gcf-item-container-block')
     scroll_children = scroll_container.find(".gcf-item-block")
     log.debug "scroll container:", scroll_container
-    `if (this.opts.auto_scroll && scroll_container.size() > 0 && scroll_children.size() > 1) { ` # ???????? sigh.....
+    if not this.opts.auto_scroll or scroll_container.size() < 1 or scroll_children.size() < 2
+      return
     state = {idx: 0}
     scroller = ->
       log.debug "current scroll position:", scroll_container.scrollTop()
       log.debug "scroll capacity:", scroll_container[0].scrollHeight - scroll_container[0].clientHeight
-      `if (typeof scroll_children[state.idx] === 'undefined' || scroll_container.scrollTop() >= scroll_container[0].scrollHeight - scroll_container[0].clientHeight) {`
-      log.debug "scroll to top"
-      state.idx = 0
-      scroll_container.animate {scrollTop: scroll_children[0].offsetTop}
-      `} else {`
-      scroll_to = scroll_children[state.idx].offsetTop
-      log.debug "scroll to #{scroll_to}px"
-      scroll_container.animate {scrollTop: scroll_to}
-      state.idx += 1
-      `}`
+      if typeof scroll_children[state.idx] is 'undefined' or scroll_container.scrollTop() >= scroll_container[0].scrollHeight - scroll_container[0].clientHeight
+        log.debug "scroll to top"
+        state.idx = 0
+        scroll_container.animate {scrollTop: scroll_children[0].offsetTop}
+      else
+        scroll_to = scroll_children[state.idx].offsetTop
+        log.debug "scroll to #{scroll_to}px"
+        scroll_container.animate {scrollTop: scroll_to}
+        state.idx += 1
     scroll_timer = setInterval scroller, this.opts.scroll_interval
-    `}`
 
 createInstance = (target, opts) ->
   F = ->
@@ -195,3 +195,5 @@ $.fn.gCalFlow = (method) ->
     "1.0.1"
   else
     $.error "Method #{method} dose not exist on jQuery.gCalFlow"
+
+# vim: set sts=2 sw=2 expandtab:
