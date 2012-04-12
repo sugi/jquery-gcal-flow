@@ -211,7 +211,7 @@ $.fn.gCalFlow = (method) ->
     this.each ->
       methods[method].apply $(this), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
-    "1.0.1"
+    "1.1.0"
   else
     $.error "Method #{method} dose not exist on jQuery.gCalFlow"
 
