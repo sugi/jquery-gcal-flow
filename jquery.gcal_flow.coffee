@@ -67,7 +67,7 @@ class gCalFlow
     if target.children().size() > 0
       log.debug "Target node has children, use target element as template."
       @template = target
-    this.update_opts(opts)
+    @update_opts(opts)
 
   update_opts: (new_opts) ->
     log.debug "update_opts was called"
@@ -88,15 +88,14 @@ class gCalFlow
       "https://www.google.com/calendar/feeds/#{@opts.calid}/public/full?alt=json-in-script&max-results=#{@opts.maxitem}&orderby=starttime&futureevents=true&sortorder=ascending&singleevents=true"
 
   fetch: ->
-    log.debug "Starting ajax call for #{this.gcal_url()}"
-    self = this
-    success_handler = (data) ->
+    log.debug "Starting ajax call for #{@gcal_url()}"
+    success_handler = (data) =>
       log.debug "Ajax call success. Response data:", data
-      self.render_data(data, this)
+      @render_data(data, this)
     $.ajax {
       success:  success_handler
       dataType: "jsonp"
-      url: this.gcal_url()
+      url: @gcal_url()
     }
 
   parse_date: (dstr) ->
@@ -120,7 +119,7 @@ class gCalFlow
     else
       t.find('.gcf-title').text feed.title.$t
     t.find('.gcf-link').attr {target: @opts.link_target, href: titlelink}
-    t.find('.gcf-last-update').text @opts.date_formatter this.parse_date feed.updated.$t
+    t.find('.gcf-last-update').text @opts.date_formatter @parse_date feed.updated.$t
 
     it = t.find('.gcf-item-block')
     it.detach()
@@ -133,13 +132,13 @@ class gCalFlow
       ci = it.clone()
       if ent.gd$when
         st = ent.gd$when[0].startTime
-        stf = @opts.date_formatter this.parse_date(st), st.indexOf('T') < 0
+        stf = @opts.date_formatter @parse_date(st), st.indexOf('T') < 0
         ci.find('.gcf-item-date').text stf
         ci.find('.gcf-item-start-date').text stf
         et = ent.gd$when[0].endTime
-        etf = @opts.date_formatter this.parse_date(et), et.indexOf('T') < 0
+        etf = @opts.date_formatter @parse_date(et), et.indexOf('T') < 0
         ci.find('.gcf-item-end-date').text etf
-      ci.find('.gcf-item-update-date').text @opts.date_formatter this.parse_date(ent.updated.$t), false
+      ci.find('.gcf-item-update-date').text @opts.date_formatter @parse_date(ent.updated.$t), false
       link = $('<a />').attr {target: @opts.link_target, href: ent.link[0].href}
       if @opts.link_item_title
         ci.find('.gcf-item-title').html link.clone().text ent.title.$t
@@ -159,7 +158,7 @@ class gCalFlow
     ic.html(items)
 
     @target.html(t.html())
-    this.bind_scroll()
+    @bind_scroll()
     @opts.callback.apply(@target) if @opts.callback
 
   bind_scroll: ->
@@ -185,31 +184,28 @@ class gCalFlow
 
 methods =
   init: (opts = {}) ->
-    data = this.data('gCalFlow')
-    if !data then this.data 'gCalFlow', { target: this, obj: new gCalFlow(this, opts) }
+    data = @data('gCalFlow')
+    if !data then @data 'gCalFlow', { target: @, obj: new gCalFlow(@, opts) }
 
   destroy: ->
-    data = this.data('gCalFlow')
+    data = @data('gCalFlow')
     data.obj.target = null
     $(window).unbind('.gCalFlow')
     data.gCalFlow.remove()
-    this.removeData('gCalFlow')
+    @removeData('gCalFlow')
 
   render: ->
-    data = this.data('gCalFlow')
-    self = data.obj
-    self.fetch()
-
+    @data('gCalFlow').obj.fetch()
       
 $.fn.gCalFlow = (method) ->
   orig_args = arguments
   if typeof method == 'object' || !method
-    this.each ->
-      methods.init.apply $(this), orig_args
-      methods.render.apply $(this), orig_args
+    @each ->
+      methods.init.apply $(@), orig_args
+      methods.render.apply $(@), orig_args
   else if methods[method]
-    this.each ->
-      methods[method].apply $(this), Array.prototype.slice.call(orig_args, 1)
+    @each ->
+      methods[method].apply $(@), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
     "1.1.0"
   else
