@@ -26,7 +26,7 @@ class gCalFlow
         <div class="gcf-item-block">
           <div class="gcf-item-header-block">
             <div class="gcf-item-date-block">
-              [<span class="gcf-item-date"></span>]
+              [<span class="gcf-item-daterange"></span>]
             </div>
             <div class="gcf-item-title-block">
               <strong class="gcf-item-title"></strong>
@@ -59,6 +59,19 @@ class gCalFlow
         return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()}"
       else
         return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()} #{pad_zero d.getHours()}:#{pad_zero d.getMinutes()}"
+    daterange_formatter: (sd, ed, allday_p) ->
+      if allday_p
+        if sd.getDate() != ed.getDate() or sd.getMonth() != ed.getMonth()
+          return "#{@date_formatter sd, allday_p} - #{pad_zero ed.getMonth()+1}-#{pad_zero ed.getDate()}"
+        else
+          return @date_formatter sd, allday_p
+      else
+        if sd.getDate() != ed.getDate() or sd.getMonth() != ed.getMonth()
+          return "#{@date_formatter sd, allday_p} - #{pad_zero ed.getMonth()+1}-#{pad_zero ed.getDate()} #{pad_zero ed.getHours()}:#{pad_zero ed.getMinutes()}"
+        else if sd.getHours() != ed.getHours() or sd.getMinutes() != ed.getMinutes()
+          return "#{@date_formatter sd, allday_p} - #{pad_zero ed.getHours()}:#{pad_zero ed.getMinutes()}"
+        else
+          return @date_formatter sd, allday_p
   }
 
   constructor: (target, opts) ->
@@ -134,7 +147,7 @@ class gCalFlow
     else
       t.find('.gcf-title').text feed.title.$t
     t.find('.gcf-link').attr {target: @opts.link_target, href: titlelink}
-    t.find('.gcf-last-update').text @opts.date_formatter @parse_date feed.updated.$t
+    t.find('.gcf-last-update').html @opts.date_formatter @parse_date feed.updated.$t
 
     it = t.find('.gcf-item-block')
     it.detach()
@@ -147,13 +160,16 @@ class gCalFlow
       ci = it.clone()
       if ent.gd$when
         st = ent.gd$when[0].startTime
-        stf = @opts.date_formatter @parse_date(st), st.indexOf('T') < 0
-        ci.find('.gcf-item-date').text stf
-        ci.find('.gcf-item-start-date').text stf
+        sd = @parse_date(st)
+        stf = @opts.date_formatter sd, st.indexOf(':') < 0
+        ci.find('.gcf-item-date').html stf
+        ci.find('.gcf-item-start-date').html stf
         et = ent.gd$when[0].endTime
-        etf = @opts.date_formatter @parse_date(et), et.indexOf('T') < 0
-        ci.find('.gcf-item-end-date').text etf
-      ci.find('.gcf-item-update-date').text @opts.date_formatter @parse_date(ent.updated.$t), false
+        ed = @parse_date(et)
+        etf = @opts.date_formatter ed, et.indexOf(':') < 0
+        ci.find('.gcf-item-end-date').html etf
+        ci.find('.gcf-item-daterange').html @opts.daterange_formatter sd, ed, st.indexOf(':') < 0
+      ci.find('.gcf-item-update-date').html @opts.date_formatter @parse_date(ent.updated.$t), false
       link = $('<a />').attr {target: @opts.link_target, href: ent.link[0].href}
       if @opts.link_item_title
         ci.find('.gcf-item-title').html link.clone().text ent.title.$t
@@ -222,7 +238,7 @@ $.fn.gCalFlow = (method) ->
     @each ->
       methods[method].apply $(@), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
-    "1.1.0"
+    "1.2.0"
   else
     $.error "Method #{method} dose not exist on jQuery.gCalFlow"
 
