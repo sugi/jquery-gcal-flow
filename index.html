@@ -38,7 +38,7 @@
         <p>Show your event list on any website</p>
         <p class="view"><a href="https://github.com/sugi/jquery-gcal-flow">View the Project on GitHub <small>sugi/jquery-gcal-flow</small></a></p>
         <ul>
-          <li><a href="https://github.com/downloads/sugi/jquery-gcal-flow/jquery-gcal-flow-1.1.0.zip">Download <strong>StableZIP</strong></a></li>
+          <li><a href="https://github.com/downloads/sugi/jquery-gcal-flow/jquery-gcal-flow-1.2.0.zip">Download <strong>StableZIP</strong></a></li>
           <li><a href="https://github.com/sugi/jquery-gcal-flow/zipball/master">Download <strong>Source</strong></a></li>
           <li><a href="https://github.com/sugi/jquery-gcal-flow">Fork On <strong>GitHub</strong></a></li>
         </ul>
@@ -84,7 +84,7 @@ $(function() { $('#gcf-simple').gCalFlow({
   | + .gcf-item-block
   |   + .gcf-item-header-block
   |   | + .gcf-item-date-block
-  |   | | + .gcf-item-date
+  |   | | + .gcf-item-daterange
   |   | + .gcf-item-title-block
   |   |   + .gcf-item-title
   |   + .gcf-item-body-block
@@ -133,6 +133,12 @@ $(function() { $('#gcf-simple').gCalFlow({
 <td>function</td>
 <td>ISO style formatter</td>
 <td>This function will be called with two arguments: Date instance and "all day flag".</td>
+</tr>
+<tr>
+<td>daterange_formatter</td>
+<td>function</td>
+<td>ISO style formatter</td>
+<td>This function will be called with three arguments: start date, end date and "all day flag".</td>
 </tr>
 <tr>
 <td>auto_scroll</td>
@@ -200,7 +206,7 @@ You can use any design by appling your template.
   &lt;div class="gcf-item-block"&gt;
     &lt;div class="gcf-item-header-block"&gt;
       &lt;div class="gcf-item-date-block"&gt;
-        [&lt;span class="gcf-item-date"&gt;&lt;/span&gt;]
+        [&lt;span class="gcf-item-daterange"&gt;&lt;/span&gt;]
       &lt;/div&gt;
       &lt;div class="gcf-item-title-block"&gt;
         &lt;strong class="gcf-item-title"&gt;&lt;/strong&gt;
@@ -253,12 +259,12 @@ You can use any design by appling your template.
 <td>This class will be treated as item template. </td>
 </tr>
 <tr>
-<td>gcf-item-date</td>
-<td>Item start date</td>
-<td>Must be a decendant of gcf-item-block.</td>
+<td>gcf-item-daterange</td>
+<td>Item date range</td>
+<td>Must be a decendant of gcf-item-block. Formatted by 'daterange_formatter' option.</td>
 </tr>
 <tr>
-<td>gcf-item-title, gcf-item-start-date</td>
+<td>gcf-item-title</td>
 <td>Item title</td>
 <td>Must be a decendant of gcf-item-block.</td>
 </tr>
@@ -271,6 +277,11 @@ You can use any design by appling your template.
 <td>gcf-item-link</td>
 <td>(text is not replaced)</td>
 <td>Must be a decendant of gcf-item-block. This class will be set "href" attribute to item URL. (not used in default)</td>
+</tr>
+<tr>
+<td>gcf-item-date, gcf-item-start-date</td>
+<td>Item start date</td>
+<td>Must be a decendant of gcf-item-block. (not used in default)</td>
 </tr>
 <tr>
 <td>gcf-item-end-date</td>
@@ -301,7 +312,7 @@ Code:<br>
     <div class="gcf-item-block">
       <div class="gcf-item-header-block">
         <div class="gcf-item-title-block">
-          [<span class="gcf-item-date">00/00</span>]
+          [<span class="gcf-item-daterange">00/00</span>]
           <strong class="gcf-item-title">Item Title of each event</strong>
         </div>
       </div>
@@ -314,9 +325,9 @@ Code:<br>
     mode: 'updates',
     maxitem: 20,
     auto_scroll: false,
-    date_formatter: function (date, allday_p) {
+    daterange_formatter: function (start_date, end_date, allday_p) {
       function pad(n) { return n < 10 ? "0"+n : n; }
-      return pad(date.getMonth()+1) + "/" + pad(date.getDate());
+      return pad(start_date.getMonth()+1) + "/" + pad(start_date.getDate()) + " - " + pad(end_date.getMonth()+1) + "/" + pad(end_date.getDate());
     }
   });
 </script>
@@ -365,7 +376,7 @@ Code:<br>
     <div class="gcf-item-block">
       <div class="gcf-item-header-block">
         <div class="gcf-item-title-block">
-          (<span class="gcf-item-date">20/12</span>)
+          (<span class="gcf-item-update-date">20/12</span>)
           <span class="gcf-item-title">Item Title of Your event</span>
            <span class="gcf-item-description"></span>
         </div>
