@@ -132,7 +132,7 @@ class gCalFlow
       return new Date(1970, 1, 1, 0, 0, 0)
 
     log.debug "time parse (gap to local): #{offset}"
-    ret = new Date(Date.UTC(year, mon - 1, day, hour, min, sec) - offset)
+    ret = new Date(new Date(year, mon - 1, day, hour, min, sec).getTime() - offset)
     log.debug "time parse: #{dstr} -> ", ret
     ret
 
