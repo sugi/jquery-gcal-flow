@@ -61,6 +61,7 @@ class gCalFlow
         return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()} #{pad_zero d.getHours()}:#{pad_zero d.getMinutes()}"
     daterange_formatter: (sd, ed, allday_p) ->
       if allday_p
+        ed = new Date(ed.getTime() - 86400 * 1000);
         if sd.getDate() != ed.getDate() or sd.getMonth() != ed.getMonth()
           return "#{@date_formatter sd, allday_p} - #{pad_zero ed.getMonth()+1}-#{pad_zero ed.getDate()}"
         else
