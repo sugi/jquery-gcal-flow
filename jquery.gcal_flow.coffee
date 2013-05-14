@@ -54,6 +54,7 @@ class gCalFlow
     link_item_description: false
     link_target: '_blank'
     callback: null
+    no_items_html: ''
     date_formatter: (d, allday_p) ->
       if allday_p
         return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()}"
@@ -156,33 +157,36 @@ class gCalFlow
     log.debug "item block template:", it
     items = $()
     log.debug "render entries:", feed.entry
-    for ent in feed.entry[0..@opts.maxitem]
-      log.debug "formatting entry:", ent
-      ci = it.clone()
-      if ent.gd$when
-        st = ent.gd$when[0].startTime
-        sd = @parse_date(st)
-        stf = @opts.date_formatter sd, st.indexOf(':') < 0
-        ci.find('.gcf-item-date').html stf
-        ci.find('.gcf-item-start-date').html stf
-        et = ent.gd$when[0].endTime
-        ed = @parse_date(et)
-        etf = @opts.date_formatter ed, et.indexOf(':') < 0
-        ci.find('.gcf-item-end-date').html etf
-        ci.find('.gcf-item-daterange').html @opts.daterange_formatter sd, ed, st.indexOf(':') < 0
-      ci.find('.gcf-item-update-date').html @opts.date_formatter @parse_date(ent.updated.$t), false
-      link = $('<a />').attr {target: @opts.link_target, href: ent.link[0].href}
-      if @opts.link_item_title
-        ci.find('.gcf-item-title').html link.clone().text ent.title.$t
-      else
-        ci.find('.gcf-item-title').text ent.title.$t
-      if @opts.link_item_description
-        ci.find('.gcf-item-description').html link.clone().text ent.content.$t
-      else
-        ci.find('.gcf-item-description').text ent.content.$t
-      ci.find('.gcf-item-link').attr {href: ent.link[0].href}
-      log.debug "formatted item entry:", ci[0]
-      items.push ci[0]
+    if feed.entry? and feed.entry.length > 0
+      for ent in feed.entry[0..@opts.maxitem]
+        log.debug "formatting entry:", ent
+        ci = it.clone()
+        if ent.gd$when
+          st = ent.gd$when[0].startTime
+          sd = @parse_date(st)
+          stf = @opts.date_formatter sd, st.indexOf(':') < 0
+          ci.find('.gcf-item-date').html stf
+          ci.find('.gcf-item-start-date').html stf
+          et = ent.gd$when[0].endTime
+          ed = @parse_date(et)
+          etf = @opts.date_formatter ed, et.indexOf(':') < 0
+          ci.find('.gcf-item-end-date').html etf
+          ci.find('.gcf-item-daterange').html @opts.daterange_formatter sd, ed, st.indexOf(':') < 0
+        ci.find('.gcf-item-update-date').html @opts.date_formatter @parse_date(ent.updated.$t), false
+        link = $('<a />').attr {target: @opts.link_target, href: ent.link[0].href}
+        if @opts.link_item_title
+          ci.find('.gcf-item-title').html link.clone().text ent.title.$t
+        else
+          ci.find('.gcf-item-title').text ent.title.$t
+        if @opts.link_item_description
+          ci.find('.gcf-item-description').html link.clone().text ent.content.$t
+        else
+          ci.find('.gcf-item-description').text ent.content.$t
+        ci.find('.gcf-item-link').attr {href: ent.link[0].href}
+        log.debug "formatted item entry:", ci[0]
+        items.push ci[0]
+    else
+      items = $('<div class=".gcf-no-items"></div>').html(@opts.no_items_html)
 
     log.debug "formatted item entry array:", items
     ic = t.find('.gcf-item-container-block')
@@ -239,7 +243,7 @@ $.fn.gCalFlow = (method) ->
     @each ->
       methods[method].apply $(@), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
-    "1.2.1"
+    "1.2.2"
   else
     $.error "Method #{method} dose not exist on jQuery.gCalFlow"
 
