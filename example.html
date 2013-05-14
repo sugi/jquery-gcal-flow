@@ -13,14 +13,14 @@
       var $ = jQuery;
       $(function() {
         $('#gcf-simple').gCalFlow({
-          calid: 'floss4science@gmail.com'
+          calid: 'linuxfoundation.org_34363837313836302d343036@resource.calendar.google.com'
         });
         $('#gcf-design').gCalFlow({
-          calid: 'floss4science@gmail.com',
+          calid: 'linuxfoundation.org_34363837313836302d343036@resource.calendar.google.com',
           maxitem: 10
         });
         $('#gcf-custom-template').gCalFlow({
-          calid: 'floss4science@gmail.com',
+          calid: 'linuxfoundation.org_34363837313836302d343036@resource.calendar.google.com',
           maxitem: 50,
           mode: 'updates',
           date_formatter: function(d, allday_p) { return (d.getMonth()+1) + "/" + d.getDate() + "/" + d.getYear().toString().substr(-2) }
@@ -36,6 +36,10 @@
   <body>
     <h1>Google Calendar Flow plugin Examples</h1>
 
+    <p>
+      See <a href="http://sugi.github.io/jquery-gcal-flow/">http://sugi.github.io/jquery-gcal-flow/</a> for details.
+    </p>
+
     <h2>Simple way</h2>
     <div id="gcf-simple">  
     </div>
@@ -44,7 +48,7 @@
     </div>
     <script type="text/javascript">
       $('#gcf-simple').gCalFlow({
-        calid: 'floss4science@gmail.com'
+        calid: 'linuxfoundation.org_34363837313836302d343036@resource.calendar.google.com'
       });
     </script>
     </textarea>
@@ -67,7 +71,7 @@
     </div>
     <script type="text/javascript">
       $('#gcf-design').gCalFlow({
-        calid: 'floss4science@gmail.com',
+        calid: 'linuxfoundation.org_34363837313836302d343036@resource.calendar.google.com',
         maxitem: 10
       });
     </script>
@@ -117,7 +121,7 @@
     </div>
     <script type="text/javascript">
         $('#gcf-custom-template').gCalFlow({
-          calid: 'floss4science@gmail.com',
+          calid: 'linuxfoundation.org_34363837313836302d343036@resource.calendar.google.com',
           maxitem: 50,
           mode: 'updates',
           date_formatter: function(d, allday_p) { return (d.getMonth()+1) + "/" + d.getDate() + "/" + d.getYear().toString().substr(-2) }
