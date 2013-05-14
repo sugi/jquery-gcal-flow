@@ -53,6 +53,7 @@ class gCalFlow
     link_item_title: true
     link_item_description: false
     link_target: '_blank'
+    item_description_in_html: false
     callback: null
     no_items_html: ''
     date_formatter: (d, allday_p) ->
@@ -157,6 +158,10 @@ class gCalFlow
     log.debug "item block template:", it
     items = $()
     log.debug "render entries:", feed.entry
+    if @opts.item_description_as_html
+      desc_body_method = 'html'
+    else
+      desc_body_method = 'text'
     if feed.entry? and feed.entry.length > 0
       for ent in feed.entry[0..@opts.maxitem]
         log.debug "formatting entry:", ent
@@ -179,9 +184,9 @@ class gCalFlow
         else
           ci.find('.gcf-item-title').text ent.title.$t
         if @opts.link_item_description
-          ci.find('.gcf-item-description').html link.clone().text ent.content.$t
+          ci.find('.gcf-item-description').html link.clone()[desc_body_method] ent.content.$t
         else
-          ci.find('.gcf-item-description').text ent.content.$t
+          ci.find('.gcf-item-description')[desc_body_method] ent.content.$t
         ci.find('.gcf-item-link').attr {href: ent.link[0].href}
         log.debug "formatted item entry:", ci[0]
         items.push ci[0]
