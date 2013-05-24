@@ -7,3 +7,4 @@
 *.orig
 *.org
 /.sass-cache
+\#*#
