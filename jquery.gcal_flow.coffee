@@ -35,6 +35,8 @@ class gCalFlow
           <div class="gcf-item-body-block">
             <div class="gcf-item-description">
             </div>
+            <div class="gcf-item-location">
+            </div>
           </div>
         </div>
       </div>
@@ -192,6 +194,7 @@ class gCalFlow
           ci.find('.gcf-item-description').html link.clone()[desc_body_method] ent.content.$t
         else
           ci.find('.gcf-item-description')[desc_body_method] ent.content.$t
+        ci.find('.gcf-item-location').text ent.gd$where[0].valueString
         ci.find('.gcf-item-link').attr {href: ent.link[0].href}
         log.debug "formatted item entry:", ci[0]
         items.push ci[0]
