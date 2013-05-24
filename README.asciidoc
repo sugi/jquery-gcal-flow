@@ -1,18 +1,18 @@
 
-jQuery gCalFlow plugin
+jQuery gCalFlow plug-in
 ======================
 
-jQuery plugin to format your google calenar feeds.
+jQuery plug-in to format your google calendar feeds.
 
 Description
 -----------
 
-This plugin provides a widget to show event list of
+This plug-in provides a widget to show event list of
 your google calendar with configurable options and
-fully customizable HTML desgin template.
+fully customizable HTML design template.
 
 See http://sugi.github.com/jquery-gcal-flow/ for details
-or check examples.html .
+or check examples.html.
 
 License
 -------
