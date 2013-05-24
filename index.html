@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>gCalFlow: jQuery Google Calendar Event List Plugin</title>
+    <title>gCalFlow: jQuery Google Calendar Event List Plug-in</title>
     <meta name="keywords" content="jQuery,google calendar,jQuery plugin">
     <meta name="description" content="A widget to show list of events of your google calendar with jQuery.">
     <link rel="stylesheet" href="stylesheets/styles.css">
@@ -35,7 +35,7 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>gCalFlow: jQuery Google Calendar Event List Plugin</h1>
+        <h1>gCalFlow: jQuery Google Calendar Event List Plug-in</h1>
         <p>Show your event list on any website</p>
         <p class="view"><a href="https://github.com/sugi/jquery-gcal-flow">View the Project on GitHub <small>sugi/jquery-gcal-flow</small></a></p>
         <ul>
@@ -50,14 +50,14 @@
         <h3 id="head">Put your calendar event listing on any website</h3>
 
         <p>
-          jQuery Google Calendar Flow plugin provides a widget
+          jQuery Google Calendar Flow plug-in provides a widget
           to show list of upcoming or recently updated events
           of public google calendar with configurable options
-          and fully customizable HTML desgin template.
+          and fully customizable HTML design template.
         </p>
 
         <p>In the simplest way, you need to specify just calendar ID.
-          The sample on this page is showen by following code:</p>
+          The sample on this page is shown by following code:</p>
 <pre><code>&lt;div id="#gcf-simple"&gt;&lt;/div&gt;
 &lt;script type="text/javascript"&gt;
 $(function() { $('#gcf-simple').gCalFlow({
@@ -69,12 +69,12 @@ $(function() { $('#gcf-simple').gCalFlow({
         <h3 id="custom">Customization</h3>
 
         <p>
-          jQuery Google Calendar Flow plugin is hightly configureable with CSS, Javascript option and HTML templating!
+          jQuery Google Calendar Flow plug-in is highly configurable with CSS, Javascript option and HTML templating!
         </p>
 
         <h4 id="css">CSS classes</h4>
 
-        <p>This plugin in uses following classes in default template. You can write CSS to override with your design.</p>
+        <p>This plug-in in uses following classes in default template. You can write CSS to override with your design.</p>
         <p>If you need more complex change, use template.<p>
         </p>
 <pre><code>.gCalFlow
@@ -97,7 +97,7 @@ $(function() { $('#gcf-simple').gCalFlow({
 
 <h4 id="options">Options</h4>
 
-<p>Following options are avaiable for jQuery#gCalFlow call.</p>
+<p>Following options are available for jQuery#gCalFlow call.</p>
 
 <table border="1">
 <tr>
@@ -116,19 +116,19 @@ $(function() { $('#gcf-simple').gCalFlow({
 <td>mode</td>
 <td>string</td>
 <td>'upcoming'</td>
-<td>'upcoming' for upcoming evnets, or 'updates' for events ordered by last modified.</td>
+<td>'upcoming' for upcoming events, or 'updates' for events ordered by last modified.</td>
 </tr>
 <tr>
 <td>feed_url</td>
 <td>string</td>
 <td>(none)</td>
-<td>Any Atom feed URL compat with google's. If this options is specified, 'calid' and 'mode' are ignored.</td>
+<td>Any Atom feed URL compatible with google's. If this option is specified, 'calid' and 'mode' are ignored.</td>
 </tr>
 <tr>
 <td>maxitem</td>
 <td>int</td>
 <td>15</td>
-<td>Limit for max number of events. You can set any number, but Google may ignore large number.</td>
+<td>Limit for max number of events. You can set any number, but Google may ignore large numbers.</td>
 </tr>
 <tr>
 <td>date_formatter</td>
@@ -158,7 +158,7 @@ $(function() { $('#gcf-simple').gCalFlow({
 <td>link_title</td>
 <td>boolean</td>
 <td>true</td>
-<td>enable link on calenar title</td>
+<td>enable link on calendar title</td>
 </tr>
 <tr>
 <td>link_item_title</td>
@@ -176,29 +176,29 @@ $(function() { $('#gcf-simple').gCalFlow({
 <td>link_target</td>
 <td>string</td>
 <td>'_blank'</td>
-<td>target attribute of auto-genrated links</td>
+<td>target attribute of auto-generated links</td>
 </tr>
 <tr>
 <td>callback</td>
 <td>function</td>
 <td>null</td>
-<td>callback function when finish rendering. In this function, a jQuery object contains target node is assigned to 'this'. This is usefull to chain other jQuery method or plugin (e.g. callback: function() { this.effect("highlight") })</td>
+<td>callback function when finish rendering. In this function, a jQuery object contains target node is assigned to 'this'. This is useful to chain other jQuery method or plug-in (e.g. callback: function() { this.effect("highlight") })</td>
 </tr>
 </table> 
 
 
 <h4 id="template">Template</h4>
 
-<p>If target element has any child node, it will be treat as custom template.
-Google Calendar Flow plugin will replace text of elements by its classname.
-You can use any design by appling your template.
+<p>If the target element has any child nodes, it will be treated as a custom template.
+Google Calendar Flow plug-in will replace the contents of elements based on their class name.
+You can use any design by creating your own template.
 
 </p>
-<p>Note: <em>To use defualt template, Keep empty target element (has no child node)!</em></p>
+<p>Note: <em>To use the default template, keep the target element empty (no child nodes)!</em></p>
 
 <h5 id="bultin">Built-in template</h5>
 
-<p>Here is built-in default. It's a good start point to modifiy design.</p>
+<p>Here is the built-in default. It's a good starting point for creating a modified template.</p>
 <pre><code>&lt;div class="gcf-header-block"&gt;
   &lt;div class="gcf-title-block"&gt;
     &lt;span class="gcf-title"&gt;&lt;/span&gt;
@@ -229,7 +229,7 @@ You can use any design by appling your template.
 
 <h5 id="vars">Variable classes</h5>
 
-<p>Texts of elements with follwoing classname will be replaced:</P>
+<p>The content of elements with following class name will be replaced:</P>
 
 <table border="1">
 <tr>
@@ -250,7 +250,7 @@ You can use any design by appling your template.
 <tr>
 <td>gcf-link</td>
 <td>(text is not replaced)</td>
-<td>This class will be set "href" attribute to calendar URL. (not used in default)</td>
+<td>This class will be set "href" attribute to calendar URL (not used in default).</td>
 </tr>
 <tr>
 <td>gcf-item-container-block</td>
@@ -265,17 +265,17 @@ You can use any design by appling your template.
 <tr>
 <td>gcf-item-daterange</td>
 <td>Item date range</td>
-<td>Must be a decendant of gcf-item-block. Formatted by 'daterange_formatter' option.</td>
+<td>Must be a descendant of gcf-item-block. Formatted by 'daterange_formatter' option.</td>
 </tr>
 <tr>
 <td>gcf-item-title</td>
 <td>Item title</td>
-<td>Must be a decendant of gcf-item-block.</td>
+<td>Must be a descendant of gcf-item-block.</td>
 </tr>
 <tr>
 <td>gcf-item-description</td>
 <td>Item description text</td>
-<td>Must be a decendant of gcf-item-block.</td>
+<td>Must be a descendant of gcf-item-block.</td>
 </tr>
 <tr>
 <td>gcf-item-location</td>
@@ -285,22 +285,22 @@ You can use any design by appling your template.
 <tr>
 <td>gcf-item-link</td>
 <td>(text is not replaced)</td>
-<td>Must be a decendant of gcf-item-block. This class will be set "href" attribute to item URL. (not used in default)</td>
+<td>Must be a descendant of gcf-item-block. This class will be set "href" attribute to item URL (not used in default).</td>
 </tr>
 <tr>
 <td>gcf-item-date, gcf-item-start-date</td>
 <td>Item start date</td>
-<td>Must be a decendant of gcf-item-block. (not used in default)</td>
+<td>Must be a descendant of gcf-item-block (not used in default).</td>
 </tr>
 <tr>
 <td>gcf-item-end-date</td>
 <td>Item end date</td>
-<td>Must be a decendant of gcf-item-block. (not used in default)</td>
+<td>Must be a descendant of gcf-item-block (not used in default).</td>
 </tr>
 <tr>
 <td>gcf-item-update-date</td>
 <td>Item update date</td>
-<td>Must be a decendant of gcf-item-block. (not used in default)</td>
+<td>Must be a descendant of gcf-item-block (not used in default).</td>
 </tr>
 </table>
 
