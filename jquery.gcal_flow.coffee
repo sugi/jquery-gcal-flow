@@ -59,16 +59,16 @@ class gCalFlow
     callback: null
     no_items_html: ''
     globalize_culture: navigator.browserLanguage or navigator.language or navigator.userLanguage
-    globalize_format_datetime: 'f'
-    globalize_format_date: 'D'
-    globalize_format_time: 't'
-    globalize_format_monthday: 'M'
+    globalize_fmt_datetime: 'f'
+    globalize_fmt_date: 'D'
+    globalize_fmt_time: 't'
+    globalize_fmt_monthday: 'M'
     date_formatter: (d, allday_p) ->
       if Globalize? and Globalize.format?
         if allday_p
-          fmtstr = @globalize_format_date
+          fmtstr = @globalize_fmt_date
         else
-          fmtstr = @globalize_format_datetime
+          fmtstr = @globalize_fmt_datetime
         return Globalize.format d, fmtstr
       else
         if allday_p
@@ -81,12 +81,12 @@ class gCalFlow
       endstr = ''
       if sd.getDate() != ed.getDate() or sd.getMonth() != ed.getMonth()
         if Globalize? and Globalize.format?
-          endstr += Globalize.format ed, @globalize_format_monthday
+          endstr += Globalize.format ed, @globalize_fmt_monthday
         else
           endstr += "#{pad_zero ed.getMonth()+1}-#{pad_zero ed.getDate()}"
       if not allday_p and (sd.getHours() != ed.getHours() or sd.getMinutes() != ed.getMinutes())
         if Globalize? and Globalize.format?
-          endstr += Globalize.format ed, @globalize_format_time
+          endstr += Globalize.format ed, @globalize_fmt_time
         else
           endstr += " #{pad_zero ed.getHours()}:#{pad_zero ed.getMinutes()}"
       ret += " - #{endstr}" if endstr
