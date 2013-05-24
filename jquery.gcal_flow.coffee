@@ -35,6 +35,8 @@ class gCalFlow
           <div class="gcf-item-body-block">
             <div class="gcf-item-description">
             </div>
+            <div class="gcf-item-location">
+            </div>
           </div>
         </div>
       </div>
@@ -63,7 +65,7 @@ class gCalFlow
         return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()} #{pad_zero d.getHours()}:#{pad_zero d.getMinutes()}"
     daterange_formatter: (sd, ed, allday_p) ->
       if allday_p
-        ed = new Date(ed.getTime() - 86400 * 1000);
+        ed = new Date(ed.getTime() - 86400 * 1000)
         if sd.getDate() != ed.getDate() or sd.getMonth() != ed.getMonth()
           return "#{@date_formatter sd, allday_p} - #{pad_zero ed.getMonth()+1}-#{pad_zero ed.getDate()}"
         else
@@ -79,22 +81,22 @@ class gCalFlow
 
   constructor: (target, opts) ->
     @target = target
-    target.addClass('gCalFlow')
+    target.addClass 'gCalFlow'
     if target.children().size() > 0
       log.debug "Target node has children, use target element as template."
       @template = target
-    @update_opts(opts)
+    @update_opts opts
 
   update_opts: (new_opts) ->
     log.debug "update_opts was called"
     log.debug "old options:", @opts
-    @opts = $.extend({}, @opts, new_opts)
+    @opts = $.extend {}, @opts, new_opts
     log.debug "new options:", @opts
 
   gcal_url: ->
     if !@opts.calid && !@opts.feed_url
       log.error "Option calid and feed_url are missing. Abort URL generation"
-      @target.text("Error: You need to set 'calid' or 'feed_url' option.")
+      @target.text "Error: You need to set 'calid' or 'feed_url' option."
       throw "gCalFlow: calid and feed_url missing"
     if @opts.feed_url
       @opts.feed_url
@@ -107,7 +109,7 @@ class gCalFlow
     log.debug "Starting ajax call for #{@gcal_url()}"
     success_handler = (data) =>
       log.debug "Ajax call success. Response data:", data
-      @render_data(data, this)
+      @render_data data, @
     $.ajax {
       success:  success_handler
       dataType: "jsonp"
@@ -115,29 +117,34 @@ class gCalFlow
     }
 
   parse_date: (dstr) ->
-    if m = dstr.match /^(\d{4})-(\d{2})-(\d{2})$/
-      return new Date(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10), 0, 0, 0)
-
-    offset = (new Date()).getTimezoneOffset() * 60 * 1000
-    year = mon = day = null
-    hour = min = sec = 0
-    if m = dstr.match /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2}(?:\.\d+)?)(Z|([+-])(\d{2}):(\d{2}))$/
-      year = parseInt m[1], 10
-      mon = parseInt m[2], 10
-      day = parseInt m[3], 10
-      hour = parseInt m[4], 10
-      min = parseInt m[5], 10
-      sec = parseInt m[6], 10
-      if m[7] != "Z"
-        offset += (if m[8] is "+" then 1 else -1) * (parseInt(m[9], 10) * 60 + parseInt(m[10], 10)) * 1000 * 60
+    date = new Date dstr
+    unless isNaN date.getTime()
+      log.debug date
+      return date
     else
-      log.warn "Time prase error! Unknown time pattern: #{dstr}"
-      return new Date(1970, 1, 1, 0, 0, 0)
+      if m = dstr.match /^(\d{4})-(\d{2})-(\d{2})$/
+        return new Date parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10), 0, 0, 0
 
-    log.debug "time parse (gap to local): #{offset}"
-    ret = new Date(new Date(year, mon - 1, day, hour, min, sec).getTime() - offset)
-    log.debug "time parse: #{dstr} -> ", ret
-    ret
+      offset = (new Date()).getTimezoneOffset() * 60 * 1000
+      year = mon = day = null
+      hour = min = sec = 0
+      if m = dstr.match /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2}(?:\.\d+)?)(Z|([+-])(\d{2}):(\d{2}))$/
+        year = parseInt m[1], 10
+        mon = parseInt m[2], 10
+        day = parseInt m[3], 10
+        hour = parseInt m[4], 10
+        min = parseInt m[5], 10
+        sec = parseInt m[6], 10
+        if m[7] != "Z"
+          offset += (if m[8] is "+" then 1 else -1) * (parseInt(m[9], 10) * 60 + parseInt(m[10], 10)) * 1000 * 60
+      else
+        log.warn "Time parse error! Unknown time pattern: #{dstr}"
+        return new Date 1970, 1, 1, 0, 0, 0
+
+      log.debug "time parse (gap to local): #{offset}"
+      ret = new Date(new Date(year, mon - 1, day, hour, min, sec).getTime() - offset)
+      log.debug "time parse: #{dstr} -> ", ret
+      return ret
 
   render_data: (data) ->
     log.debug "start rendering for data:", data
@@ -187,18 +194,19 @@ class gCalFlow
           ci.find('.gcf-item-description').html link.clone()[desc_body_method] ent.content.$t
         else
           ci.find('.gcf-item-description')[desc_body_method] ent.content.$t
+        ci.find('.gcf-item-location').text ent.gd$where[0].valueString
         ci.find('.gcf-item-link').attr {href: ent.link[0].href}
         log.debug "formatted item entry:", ci[0]
         items.push ci[0]
     else
-      items = $('<div class=".gcf-no-items"></div>').html(@opts.no_items_html)
+      items = $('<div class=".gcf-no-items"></div>').html @opts.no_items_html
 
     log.debug "formatted item entry array:", items
     ic = t.find('.gcf-item-container-block')
     log.debug "item container element:", ic
-    ic.html(items)
+    ic.html items
 
-    @target.html(t.html())
+    @target.html t.html()
     @bind_scroll()
     @opts.callback.apply(@target) if @opts.callback
 
@@ -225,15 +233,15 @@ class gCalFlow
 
 methods =
   init: (opts = {}) ->
-    data = @data('gCalFlow')
+    data = @data 'gCalFlow'
     if !data then @data 'gCalFlow', { target: @, obj: new gCalFlow(@, opts) }
 
   destroy: ->
-    data = @data('gCalFlow')
+    data = @data 'gCalFlow'
     data.obj.target = null
-    $(window).unbind('.gCalFlow')
+    $(window).unbind '.gCalFlow'
     data.gCalFlow.remove()
-    @removeData('gCalFlow')
+    @removeData 'gCalFlow'
 
   render: ->
     @data('gCalFlow').obj.fetch()
@@ -250,6 +258,6 @@ $.fn.gCalFlow = (method) ->
   else if method == 'version'
     "1.2.2"
   else
-    $.error "Method #{method} dose not exist on jQuery.gCalFlow"
+    $.error "Method #{method} does not exist on jQuery.gCalFlow"
 
 # vim: set sts=2 sw=2 expandtab:
