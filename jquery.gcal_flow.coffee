@@ -58,25 +58,39 @@ class gCalFlow
     item_description_in_html: false
     callback: null
     no_items_html: ''
+    globalize_culture: navigator.browserLanguage or navigator.language or navigator.userLanguage
+    globalize_format_datetime: 'f'
+    globalize_format_date: 'D'
+    globalize_format_time: 't'
+    globalize_format_monthday: 'M'
     date_formatter: (d, allday_p) ->
-      if allday_p
-        return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()}"
+      if Globalize? and Globalize.format?
+        if allday_p
+          fmtstr = @globalize_format_date
+        else
+          fmtstr = @globalize_format_datetime
+        return Globalize.format d, fmtstr
       else
-        return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()} #{pad_zero d.getHours()}:#{pad_zero d.getMinutes()}"
+        if allday_p
+          return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()}"
+        else
+          return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()} #{pad_zero d.getHours()}:#{pad_zero d.getMinutes()}"
     daterange_formatter: (sd, ed, allday_p) ->
-      if allday_p
-        ed = new Date(ed.getTime() - 86400 * 1000)
-        if sd.getDate() != ed.getDate() or sd.getMonth() != ed.getMonth()
-          return "#{@date_formatter sd, allday_p} - #{pad_zero ed.getMonth()+1}-#{pad_zero ed.getDate()}"
+      ret = @date_formatter sd, allday_p
+      ed = new Date(ed.getTime() - 86400 * 1000) if allday_p
+      endstr = ''
+      if sd.getDate() != ed.getDate() or sd.getMonth() != ed.getMonth()
+        if Globalize? and Globalize.format?
+          endstr += Globalize.format ed, @globalize_format_monthday
         else
-          return @date_formatter sd, allday_p
-      else
-        if sd.getDate() != ed.getDate() or sd.getMonth() != ed.getMonth()
-          return "#{@date_formatter sd, allday_p} - #{pad_zero ed.getMonth()+1}-#{pad_zero ed.getDate()} #{pad_zero ed.getHours()}:#{pad_zero ed.getMinutes()}"
-        else if sd.getHours() != ed.getHours() or sd.getMinutes() != ed.getMinutes()
-          return "#{@date_formatter sd, allday_p} - #{pad_zero ed.getHours()}:#{pad_zero ed.getMinutes()}"
+          endstr += "#{pad_zero ed.getMonth()+1}-#{pad_zero ed.getDate()}"
+      if not allday_p and (sd.getHours() != ed.getHours() or sd.getMinutes() != ed.getMinutes())
+        if Globalize? and Globalize.format?
+          endstr += Globalize.format ed, @globalize_format_time
         else
-          return @date_formatter sd, allday_p
+          endstr += " #{pad_zero ed.getHours()}:#{pad_zero ed.getMinutes()}"
+      ret += " - #{endstr}" if endstr
+      return ret
   }
 
   constructor: (target, opts) ->
@@ -244,6 +258,8 @@ methods =
     @removeData 'gCalFlow'
 
   render: ->
+    if Globalize? and Globalize.culture?
+      Globalize.culture @data('gCalFlow').obj.opts.globalize_culture
     @data('gCalFlow').obj.fetch()
       
 $.fn.gCalFlow = (method) ->
