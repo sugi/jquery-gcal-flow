@@ -76,10 +76,10 @@
   -moz-border-radius: $radius_size;
   border-radius: $radius_size;
   background: -webkit-gradient(linear, left top, left bottom, from($light_color), to($dark_color));
-  filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffffffff,EndColorStr=#ffdddddd); zoom:1;
   background: -moz-linear-gradient(top, $light_color, $dark_color);
   background: -o-linear-gradient(top, $light_color, $dark_color);
-  background: linear-gradient(top, $light_color, $dark_color);
+  background: linear-gradient(to bottom, $light_color, $dark_color);
+  filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffffffff,EndColorStr=#ffeeeeee); zoom:1;
   color: blak;
 
   .gcf-header-block {
@@ -92,10 +92,10 @@
     border-top-left-radius: $radius_size;
     border-top-right-radius: $radius_size;
     background: -webkit-gradient(linear, left top, left bottom, from($light_color), to($dark_color));
-    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffAAB1DC,EndColorStr=#ff3B4CA5); zoom:1;
     background: -moz-linear-gradient(top, $light_color, $dark_color);
     background: -o-linear-gradient(top, $light_color, $dark_color);
-    background: linear-gradient(top, $light_color, $dark_color);
+    background: linear-gradient(to bottom, $light_color, $dark_color);
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffAAB1DC,EndColorStr=#ff3B4CA5); zoom:1;
   }
   .gcf-item-body-block {
     color: #333;
