@@ -184,6 +184,36 @@ $(function() { $('#gcf-simple').gCalFlow({
 <td>null</td>
 <td>callback function when finish rendering. In this function, a jQuery object contains target node is assigned to 'this'. This is useful to chain other jQuery method or plug-in (e.g. callback: function() { this.effect("highlight") })</td>
 </tr>
+<tr>
+<td>globalize_culture</td>
+<td>string</td>
+<td>(auto-detect)</td>
+<td>Culture string for Globalize</td>
+</tr>
+<tr>
+<td>globalize_fmt_datetime</td>
+<td>string</td>
+<td>'f'</td>
+<td>Format string of Globalize for date and time</td>
+</tr>
+<tr>
+<td>globalize_fmt_date</td>
+<td>string</td>
+<td>'D'</td>
+<td>Format string of Globalize for date</td>
+</tr>
+<tr>
+<td>globalize_fmt_time</td>
+<td>string</td>
+<td>'t'</td>
+<td>Format string of Globalize for time</td>
+</tr>
+<tr>
+<td>globalize_fmt_monthday</td>
+<td>string</td>
+<td>'M'</td>
+<td>Format string of Globalize for month and day</td>
+</tr>
 </table> 
 
 
@@ -303,6 +333,27 @@ You can use any design by creating your own template.
 <td>Must be a descendant of gcf-item-block (not used in default).</td>
 </tr>
 </table>
+
+<h3 id="globalize">Date format with Globalize</h3>
+
+<p>
+You can use
+<a href="https://github.com/jquery/globalize">Globalize</a>
+to customize date format easily.
+Load Globalize Javascript files like following;
+</p>
+
+<pre>
+&lt;script src=&quot;/path/to/your/globalize.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;/path/to/your/cultures/globalize.culture.<i>en-US</i>.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+</pre>
+
+<p>
+And customize <b>globalize_fmt_*</b> options (<em>globalize_fmt_datetime, globalize_fmt_date, globalize_fmt_time, globalize_fmt_monthday</em>) with 
+<a href="https://github.com/jquery/globalize#dates">
+their format string</a>.
+</p>
+
 
 <h3 id="example">Examples</h3>
 
