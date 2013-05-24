@@ -58,7 +58,7 @@ class gCalFlow
     item_description_in_html: false
     callback: null
     no_items_html: ''
-    globalize_culture: navigator.browserLanguage or navigator.language or navigator.userLanguage
+    globalize_culture: navigator? and (navigator.browserLanguage or navigator.language or navigator.userLanguage)
     globalize_fmt_datetime: 'f'
     globalize_fmt_date: 'D'
     globalize_fmt_time: 't'
