@@ -18,6 +18,7 @@
 		"url": "http://www.opensource.org/licenses/MIT"
 		}
 	],
+	"download": "https://docs.google.com/uc?export=download&id=0B1NvujAKTAEaR2hKWTQtWDdaanc",
 	"bugs": "https://github.com/sugi/jquery-gcal-flow/issues",
 	"homepage": "http://sugi.github.io/jquery-gcal-flow/",
 	"dependencies": {
