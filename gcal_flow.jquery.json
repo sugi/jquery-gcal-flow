@@ -1,12 +1,12 @@
 {
 	"name": "gcal_flow",
+	"version": "1.2.2",
 	"title": "jQuery gCalFlow",
-	"description": "jQuery plugin to format your google calenar feeds.",
+	"description": "jQuery plug-in to format your google calenar feeds.",
 	"keywords": [
 		"calendar",
 		"google-calendar"
 	],
-	"version": "1.2.1",
 	"author": {
 		"name": "Tatsuki Sugiura",
 		"email": "sugi@nemui.org",
