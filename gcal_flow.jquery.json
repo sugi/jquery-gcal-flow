@@ -1,6 +1,6 @@
 {
 	"name": "gcal_flow",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"title": "jQuery gCalFlow",
 	"description": "jQuery plug-in to format your google calenar feeds.",
 	"keywords": [
