@@ -1,0 +1,40 @@
+== v1.2.4 (2013-05-25)
+
+ * Null update to fix download URL on jQuery Plugin Registry.
+
+== v1.2.3 (2013-05-25)
+
+ * Add gh-pages branch as document.
+
+== v1.2.2 (2013-05-25)
+
+ * Add date format feature with Globalize.
+ * Fix design for IE8 & 10.
+ * Add .gcf-item-location. (By torque)
+ * Fix document typos. (By torque)
+ * Add no_items_html option.
+
+== v1.2.1 (2012-04-19)
+
+ * Fix timezone, end date on all day.
+
+== v1.2.0 (2012-04-16)
+
+ * Fix date parser.
+ * Add date range formatter.
+
+== v1.1.0 (2012-04-13)
+
+ * More js and template options
+
+== v1.0.0 (2012-04-06)
+
+ * Add upcoming mode.
+
+== v0.2.0 (2012-04-05)
+
+ * Add autoscroll.
+
+== v0.1.0 (2012-04-05)
+
+ * Initial version.
