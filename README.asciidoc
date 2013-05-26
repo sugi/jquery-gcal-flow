@@ -11,7 +11,7 @@ This plug-in provides a widget to show event list of
 your google calendar with configurable options and
 fully customizable HTML design template.
 
-See http://sugi.github.com/jquery-gcal-flow/ for details
+See http://sugi.github.io/jquery-gcal-flow/ for details
 or check examples.html.
 
 License
