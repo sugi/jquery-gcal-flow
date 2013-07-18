@@ -1,3 +1,9 @@
+== v1.2.5 (2013-07-18)
+
+ * Fix timezone issue on all day event.
+   (Wrong date was shown on all day event with Firefox
+    and Chrome when system has negative timezone offset.)
+
 == v1.2.4 (2013-05-25)
 
  * Null update to fix download URL on jQuery Plugin Registry.

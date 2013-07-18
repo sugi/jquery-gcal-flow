@@ -131,34 +131,30 @@ class gCalFlow
     }
 
   parse_date: (dstr) ->
-    date = new Date dstr
-    unless isNaN date.getTime()
-      log.debug date
-      return date
+    # I do not use built-in Date() parser to avoid timezone issue on all day event.
+    if m = dstr.match /^(\d{4})-(\d{2})-(\d{2})$/
+      return new Date parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10), 0, 0, 0
+
+    offset = (new Date()).getTimezoneOffset() * 60 * 1000
+    year = mon = day = null
+    hour = min = sec = 0
+    if m = dstr.match /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2}(?:\.\d+)?)(Z|([+-])(\d{2}):(\d{2}))$/
+      year = parseInt m[1], 10
+      mon = parseInt m[2], 10
+      day = parseInt m[3], 10
+      hour = parseInt m[4], 10
+      min = parseInt m[5], 10
+      sec = parseInt m[6], 10
+      if m[7] != "Z"
+        offset += (if m[8] is "+" then 1 else -1) * (parseInt(m[9], 10) * 60 + parseInt(m[10], 10)) * 1000 * 60
     else
-      if m = dstr.match /^(\d{4})-(\d{2})-(\d{2})$/
-        return new Date parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10), 0, 0, 0
+      log.warn "Time parse error! Unknown time pattern: #{dstr}"
+      return new Date 1970, 1, 1, 0, 0, 0
 
-      offset = (new Date()).getTimezoneOffset() * 60 * 1000
-      year = mon = day = null
-      hour = min = sec = 0
-      if m = dstr.match /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2}(?:\.\d+)?)(Z|([+-])(\d{2}):(\d{2}))$/
-        year = parseInt m[1], 10
-        mon = parseInt m[2], 10
-        day = parseInt m[3], 10
-        hour = parseInt m[4], 10
-        min = parseInt m[5], 10
-        sec = parseInt m[6], 10
-        if m[7] != "Z"
-          offset += (if m[8] is "+" then 1 else -1) * (parseInt(m[9], 10) * 60 + parseInt(m[10], 10)) * 1000 * 60
-      else
-        log.warn "Time parse error! Unknown time pattern: #{dstr}"
-        return new Date 1970, 1, 1, 0, 0, 0
-
-      log.debug "time parse (gap to local): #{offset}"
-      ret = new Date(new Date(year, mon - 1, day, hour, min, sec).getTime() - offset)
-      log.debug "time parse: #{dstr} -> ", ret
-      return ret
+    log.debug "time parse (gap to local): #{offset}"
+    ret = new Date(new Date(year, mon - 1, day, hour, min, sec).getTime() - offset)
+    log.debug "time parse: #{dstr} -> ", ret
+    return ret
 
   render_data: (data) ->
     log.debug "start rendering for data:", data
@@ -272,7 +268,7 @@ $.fn.gCalFlow = (method) ->
     @each ->
       methods[method].apply $(@), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
-    "1.2.4"
+    "1.2.5"
   else
     $.error "Method #{method} does not exist on jQuery.gCalFlow"
 

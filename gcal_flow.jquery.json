@@ -1,6 +1,6 @@
 {
 	"name": "gcal_flow",
-	"version": "1.2.4",
+	"version": "1.2.5",
 	"title": "jQuery gCalFlow",
 	"description": "jQuery plug-in to format your google calenar feeds.",
 	"keywords": [
@@ -18,7 +18,7 @@
 		"url": "http://www.opensource.org/licenses/MIT"
 		}
 	],
-	"download": "https://googledrive.com/host/0B1NvujAKTAEaRXRTT1c3dGpZRDA/jquery-gcal-flow-1.2.4.zip",
+	"download": "https://googledrive.com/host/0B1NvujAKTAEaRXRTT1c3dGpZRDA/jquery-gcal-flow-1.2.5.zip",
 	"bugs": "https://github.com/sugi/jquery-gcal-flow/issues",
 	"homepage": "http://sugi.github.io/jquery-gcal-flow/",
 	"dependencies": {
