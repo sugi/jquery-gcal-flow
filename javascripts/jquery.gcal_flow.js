@@ -49,7 +49,7 @@
       item_description_in_html: false,
       callback: null,
       no_items_html: '',
-      globalize_culture: navigator.browserLanguage || navigator.language || navigator.userLanguage,
+      globalize_culture: (typeof navigator !== "undefined" && navigator !== null) && (navigator.browserLanguage || navigator.language || navigator.userLanguage),
       globalize_fmt_datetime: 'f',
       globalize_fmt_date: 'D',
       globalize_fmt_time: 't',
@@ -147,37 +147,31 @@
     };
 
     gCalFlow.prototype.parse_date = function(dstr) {
-      var date, day, hour, m, min, mon, offset, ret, sec, year;
-      date = new Date(dstr);
-      if (!isNaN(date.getTime())) {
-        log.debug(date);
-        return date;
-      } else {
-        if (m = dstr.match(/^(\d{4})-(\d{2})-(\d{2})$/)) {
-          return new Date(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10), 0, 0, 0);
-        }
-        offset = (new Date()).getTimezoneOffset() * 60 * 1000;
-        year = mon = day = null;
-        hour = min = sec = 0;
-        if (m = dstr.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2}(?:\.\d+)?)(Z|([+-])(\d{2}):(\d{2}))$/)) {
-          year = parseInt(m[1], 10);
-          mon = parseInt(m[2], 10);
-          day = parseInt(m[3], 10);
-          hour = parseInt(m[4], 10);
-          min = parseInt(m[5], 10);
-          sec = parseInt(m[6], 10);
-          if (m[7] !== "Z") {
-            offset += (m[8] === "+" ? 1 : -1) * (parseInt(m[9], 10) * 60 + parseInt(m[10], 10)) * 1000 * 60;
-          }
-        } else {
-          log.warn("Time parse error! Unknown time pattern: " + dstr);
-          return new Date(1970, 1, 1, 0, 0, 0);
-        }
-        log.debug("time parse (gap to local): " + offset);
-        ret = new Date(new Date(year, mon - 1, day, hour, min, sec).getTime() - offset);
-        log.debug("time parse: " + dstr + " -> ", ret);
-        return ret;
+      var day, hour, m, min, mon, offset, ret, sec, year;
+      if (m = dstr.match(/^(\d{4})-(\d{2})-(\d{2})$/)) {
+        return new Date(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10), 0, 0, 0);
       }
+      offset = (new Date()).getTimezoneOffset() * 60 * 1000;
+      year = mon = day = null;
+      hour = min = sec = 0;
+      if (m = dstr.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2}(?:\.\d+)?)(Z|([+-])(\d{2}):(\d{2}))$/)) {
+        year = parseInt(m[1], 10);
+        mon = parseInt(m[2], 10);
+        day = parseInt(m[3], 10);
+        hour = parseInt(m[4], 10);
+        min = parseInt(m[5], 10);
+        sec = parseInt(m[6], 10);
+        if (m[7] !== "Z") {
+          offset += (m[8] === "+" ? 1 : -1) * (parseInt(m[9], 10) * 60 + parseInt(m[10], 10)) * 1000 * 60;
+        }
+      } else {
+        log.warn("Time parse error! Unknown time pattern: " + dstr);
+        return new Date(1970, 1, 1, 0, 0, 0);
+      }
+      log.debug("time parse (gap to local): " + offset);
+      ret = new Date(new Date(year, mon - 1, day, hour, min, sec).getTime() - offset);
+      log.debug("time parse: " + dstr + " -> ", ret);
+      return ret;
     };
 
     gCalFlow.prototype.render_data = function(data) {
@@ -344,7 +338,7 @@
         return methods[method].apply($(this), Array.prototype.slice.call(orig_args, 1));
       });
     } else if (method === 'version') {
-      return "1.2.2";
+      return "1.2.5";
     } else {
       return $.error("Method " + method + " does not exist on jQuery.gCalFlow");
     }
