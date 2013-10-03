@@ -333,12 +333,15 @@ You can use any design by creating your own template.
 </tr>
 </table>
 
-<h3 id="globalize">Date format with Globalize</h3>
+<h3 id="globalize">Date formatting with Globalize</h3>
 
 <p>
-You can use
+In default, widget shows ISO style date.
+To customize date format easily, you can use
 <a href="https://github.com/jquery/globalize">Globalize</a>
-to customize date format easily.
+Javascript library.
+By just loading Globalize, default date formatting will be
+changed to new one which includes full month and weekday names.
 Load Globalize Javascript files like following;
 </p>
 
@@ -348,11 +351,20 @@ Load Globalize Javascript files like following;
 </pre>
 
 <p>
-And customize <b>globalize_fmt_*</b> options (<em>globalize_fmt_datetime, globalize_fmt_date, globalize_fmt_time, globalize_fmt_monthday</em>) with 
+If you'd like to customize more, tune <b>globalize_fmt_*</b> options (<em>globalize_fmt_datetime, globalize_fmt_date, globalize_fmt_time, globalize_fmt_monthday</em>) with
 <a href="https://github.com/jquery/globalize#dates">
 their format string</a>.
+For example, to use short month/week names and 24h format;
 </p>
 
+<pre>
+$('#your-widget-id').gCalFlow({
+  globalize_fmt_datetime: "dddd', 'MMM' 'dd', 'yyyy' 'hh':'mm",
+  globalize_fmt_date: "dddd', 'MMM' 'dd",
+  globalize_fmt_time: "hh':'mm",
+  globalize_fmt_monthday: "MMM"
+});
+</pre>
 
 <h3 id="example">Examples</h3>
 
