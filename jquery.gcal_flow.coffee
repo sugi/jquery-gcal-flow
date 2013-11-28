@@ -55,7 +55,7 @@ class gCalFlow
     link_item_title: true
     link_item_description: false
     link_target: '_blank'
-    item_description_in_html: false
+    item_description_as_html: false
     callback: null
     no_items_html: ''
     globalize_culture: navigator? and (navigator.browserLanguage or navigator.language or navigator.userLanguage)
