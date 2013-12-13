@@ -5,6 +5,9 @@ all: jquery.gcal_flow.js jquery.gcal_flow.css
 clean:
 	rm -f *.js *.css *~ *.zip
 
+%.min.js: %.js
+	uglifyjs -o $@ $<
+
 %.js: %.coffee
 	coffee -c $<
 
@@ -19,10 +22,10 @@ clean:
 version: jquery.gcal_flow.js
 	@echo $(VERSION)
 
-dist: jquery.gcal_flow.js jquery.gcal_flow.css
+dist: jquery.gcal_flow.js jquery.gcal_flow.min.js jquery.gcal_flow.css
 	rm -f jquery-gcal-flow-$(VERSION).zip
 	mkdir -p jquery-gcal-flow-$(VERSION)
-	install -m 644 README.asciidoc *.html *.js *.css jquery-gcal-flow-$(VERSION)
+	install -m 644 README.asciidoc ReleaseNote *.html *.js *.css jquery-gcal-flow-$(VERSION)
 	git archive --format=tar --prefix=jquery-gcal-flow-$(VERSION)/docs/ \
 		gh-pages | tar --exclude=.gitignore --exclude=params.json -xf -
 	zip -9r jquery-gcal-flow-$(VERSION).zip jquery-gcal-flow-$(VERSION)

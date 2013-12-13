@@ -1,3 +1,12 @@
+== v1.2.6 (2013-12-19)
+
+ * Fix minor typo on default item_description_as_html option.
+ * Add minified version on dist archive.
+ * Documentation fixes
+   * Fix typo on sample code of documentation (gcf-simple).
+   * Add globalize example.
+   * Add docs for item_description_as_html and no_items_html
+
 == v1.2.5 (2013-07-18)
 
  * Fix timezone issue on all day event.
