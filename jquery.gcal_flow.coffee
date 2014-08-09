@@ -124,11 +124,10 @@ class gCalFlow
     success_handler = (data) =>
       log.debug "Ajax call success. Response data:", data
       @render_data data, @
-    $.ajax {
+    $.ajax
       success:  success_handler
       dataType: "jsonp"
       url: @gcal_url()
-    }
 
   parse_date: (dstr) ->
     # I do not use built-in Date() parser to avoid timezone issue on all day event.
@@ -268,7 +267,7 @@ $.fn.gCalFlow = (method) ->
     @each ->
       methods[method].apply $(@), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
-    "1.2.6"
+    "1.2.7"
   else
     $.error "Method #{method} does not exist on jQuery.gCalFlow"
 
