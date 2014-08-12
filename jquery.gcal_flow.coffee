@@ -115,7 +115,7 @@ class gCalFlow
     if @opts.feed_url
       @opts.feed_url
     else if @opts.mode == 'updates'
-      "https://www.google.com/calendar/feeds/#{@opts.calid}/public/full?alt=json-in-script&max-results=#{@opts.maxitem}&orderby=lastmodified&sortorder=descending&futureevents=true"
+      "https://www.google.com/calendar/feeds/#{@opts.calid}/public/full?alt=json-in-script&max-results=#{@opts.maxitem}&orderby=lastmodified&sortorder=descending&futureevents=true&singleevents=true"
     else
       "https://www.google.com/calendar/feeds/#{@opts.calid}/public/full?alt=json-in-script&max-results=#{@opts.maxitem}&orderby=starttime&futureevents=true&sortorder=ascending&singleevents=true"
 
