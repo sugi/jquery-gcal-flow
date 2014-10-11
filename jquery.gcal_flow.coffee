@@ -208,7 +208,7 @@ class gCalFlow
         log.debug "formatted item entry:", ci[0]
         items.push ci[0]
     else
-      items = $('<div class=".gcf-no-items"></div>').html @opts.no_items_html
+      items = $('<div class="gcf-no-items"></div>').html @opts.no_items_html
 
     log.debug "formatted item entry array:", items
     ic = t.find('.gcf-item-container-block')
