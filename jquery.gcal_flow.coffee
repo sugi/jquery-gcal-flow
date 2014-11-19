@@ -47,6 +47,7 @@ class gCalFlow
   opts: {
     maxitem: 15
     calid: null
+    apikey: null
     mode: 'upcoming'
     feed_url: null
     auto_scroll: true
@@ -54,6 +55,7 @@ class gCalFlow
     link_title: true
     link_item_title: true
     link_item_description: false
+    link_item_location: false
     link_target: '_blank'
     item_description_as_html: false
     callback: null
@@ -115,9 +117,11 @@ class gCalFlow
     if @opts.feed_url
       @opts.feed_url
     else if @opts.mode == 'updates'
-      "https://www.google.com/calendar/feeds/#{@opts.calid}/public/full?alt=json-in-script&max-results=#{@opts.maxitem}&orderby=lastmodified&sortorder=descending&futureevents=true&singleevents=true"
+      now = new Date().toJSON()
+      "https://www.googleapis.com/calendar/v3/calendars/#{@opts.calid}/events?key=#{@opts.apikey}&maxResults=#{@opts.maxitem}&orderBy=updated&timeMin=#{now}&singleEvents=true"
     else
-      "https://www.google.com/calendar/feeds/#{@opts.calid}/public/full?alt=json-in-script&max-results=#{@opts.maxitem}&orderby=starttime&futureevents=true&sortorder=ascending&singleevents=true"
+      now = new Date().toJSON()
+      "https://www.googleapis.com/calendar/v3/calendars/#{@opts.calid}/events?key=#{@opts.apikey}&maxResults=#{@opts.maxitem}&orderBy=startTime&timeMin=#{now}&singleEvents=true"
 
   fetch: ->
     log.debug "Starting ajax call for #{@gcal_url()}"
@@ -125,6 +129,7 @@ class gCalFlow
       log.debug "Ajax call success. Response data:", data
       @render_data data, @
     $.ajax
+      type:  'GET'
       success:  success_handler
       dataType: "jsonp"
       url: @gcal_url()
@@ -144,6 +149,7 @@ class gCalFlow
       hour = parseInt m[4], 10
       min = parseInt m[5], 10
       sec = parseInt m[6], 10
+      offset = (new Date(year,mon - 1, day, hour, min, sec)).getTimezoneOffset() * 60 * 1000
       if m[7] != "Z"
         offset += (if m[8] is "+" then 1 else -1) * (parseInt(m[9], 10) * 60 + parseInt(m[10], 10)) * 1000 * 60
     else
@@ -157,54 +163,65 @@ class gCalFlow
 
   render_data: (data) ->
     log.debug "start rendering for data:", data
-    feed = data.feed
     t = @template.clone()
 
     titlelink = @opts.titlelink ? "http://www.google.com/calendar/embed?src=#{@opts.calid}"
     if @opts.link_title
-      t.find('.gcf-title').html $("<a />").attr({target: @opts.link_target, href: titlelink}).text feed.title.$t
+      t.find('.gcf-title').html $("<a />").attr({target: @opts.link_target, href: titlelink}).text data.summary
     else
-      t.find('.gcf-title').text feed.title.$t
+      t.find('.gcf-title').text data.summary
     t.find('.gcf-link').attr {target: @opts.link_target, href: titlelink}
-    t.find('.gcf-last-update').html @opts.date_formatter @parse_date feed.updated.$t
+    t.find('.gcf-last-update').html @opts.date_formatter @parse_date data.updated
 
     it = t.find('.gcf-item-block')
     it.detach()
     it = $(it[0])
     log.debug "item block template:", it
     items = $()
-    log.debug "render entries:", feed.entry
+    log.debug "render entries:", data.items
     if @opts.item_description_as_html
       desc_body_method = 'html'
     else
       desc_body_method = 'text'
-    if feed.entry? and feed.entry.length > 0
-      for ent in feed.entry[0..@opts.maxitem]
+    if data.items? and data.items.length > 0
+      for ent in data.items[0..@opts.maxitem]
         log.debug "formatting entry:", ent
         ci = it.clone()
-        if ent.gd$when
-          st = ent.gd$when[0].startTime
+        if ent.start
+  	      if (ent.start.dateTime) 
+            st = ent.start.dateTime
+          else
+            st = ent.start.date
           sd = @parse_date(st)
           stf = @opts.date_formatter sd, st.indexOf(':') < 0
           ci.find('.gcf-item-date').html stf
           ci.find('.gcf-item-start-date').html stf
-          et = ent.gd$when[0].endTime
+        if ent.end
+  	      if (ent.end.dateTime) 
+            et = ent.end.dateTime
+          else
+            et = ent.end.date
           ed = @parse_date(et)
           etf = @opts.date_formatter ed, et.indexOf(':') < 0
           ci.find('.gcf-item-end-date').html etf
           ci.find('.gcf-item-daterange').html @opts.daterange_formatter sd, ed, st.indexOf(':') < 0
-        ci.find('.gcf-item-update-date').html @opts.date_formatter @parse_date(ent.updated.$t), false
-        link = $('<a />').attr {target: @opts.link_target, href: ent.link[0].href}
+        ci.find('.gcf-item-update-date').html @opts.date_formatter @parse_date(ent.updated), false
+        link = $('<a />').attr {target: @opts.link_target, href: ent.htmlLink}
         if @opts.link_item_title
-          ci.find('.gcf-item-title').html link.clone().text ent.title.$t
+          ci.find('.gcf-item-title').html link.clone().text ent.summary
         else
-          ci.find('.gcf-item-title').text ent.title.$t
+          ci.find('.gcf-item-title').text ent.summary
         if @opts.link_item_description
-          ci.find('.gcf-item-description').html link.clone()[desc_body_method] ent.content.$t
+          ci.find('.gcf-item-description').html link.clone()[desc_body_method] ent.description
         else
-          ci.find('.gcf-item-description')[desc_body_method] ent.content.$t
+          ci.find('.gcf-item-description')[desc_body_method] ent.description
+        if @opts.link_item_location
+          gmapslink = "<a href='https://maps.google.de/maps?q=" + encodeURI(ent.location.replace(" ","+")) + "' target='new'>" + ent.location + "</a>"
+          ci.find('.gcf-item-location').html(gmapslink)
+        else
+          ci.find('.gcf-item-location').text(ent.location)
         ci.find('.gcf-item-location').text ent.gd$where[0].valueString
-        ci.find('.gcf-item-link').attr {href: ent.link[0].href}
+        ci.find('.gcf-item-link').attr {href: ent.htmlLink}
         log.debug "formatted item entry:", ci[0]
         items.push ci[0]
     else
