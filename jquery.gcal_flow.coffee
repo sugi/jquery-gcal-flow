@@ -3,12 +3,20 @@ $ = jQuery
 log = {}
 log.error = log.warn = log.log = log.info = log.debug = ->
 
-if window? and console?
+if window? and console? and console.log?
   unless window._gCalFlow_quiet
     for prio in ['error', 'warn', 'info']
-      log[prio] = if console[prio]? then console[prio] else console.log
+      log[prio] = ->
+        if console[prio]
+          console[prio].apply console, arguments
+        else
+          console.log.apply console, arguments
   if window._gCalFlow_debug
-    log.debug = if console.debug? then console.debug else console.log
+    log.debug = ->
+      if console.debug?
+        console.debug.apply console, arguments
+      else
+        console.log.apply console, arguments
 
 pad_zero = (num, size = 2) ->
   if 10 * (size-1) <= num then return num
@@ -290,7 +298,7 @@ $.fn.gCalFlow = (method) ->
     @each ->
       methods[method].apply $(@), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
-    "3.0.0"
+    "3.0.1"
   else
     $.error "Method #{method} does not exist on jQuery.gCalFlow"
 
