@@ -6,9 +6,9 @@
     <title>gCalFlow: jQuery Google Calendar Event List Plug-in</title>
     <meta name="keywords" content="jQuery,google calendar,jQuery plugin">
     <meta name="description" content="A widget to show list of events of your google calendar with jQuery.">
-    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/styles.css?v3.0.0">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <link rel="stylesheet" href="stylesheets/jquery.gcal_flow.css">
+    <link rel="stylesheet" href="stylesheets/jquery.gcal_flow.css?v3.0.0">
     <style tyle="text/css">
       .gCalFlow { font-size: 100%; font-weight: normal; line-height: 1.2; margin-bottom: 2em;}
       .gCalFlow a { font-weight: 550; }
@@ -26,7 +26,7 @@
         });
       });
     </script>
-    <script type="text/javascript" src="javascripts/jquery.gcal_flow.min.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.gcal_flow.min.js?v3.0.0"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,7 +65,19 @@ $(function() { $('#gcf-simple').gCalFlow({
 &lt;/script&gt;
 </code></pre>
 
-        <h3 id="custom">Customization</h3>
+<h3 id="apiv3">Google Calendar API v3 Migration Note</h3>
+
+<p>
+Old version of this plugin (< 3.0.0) uses Calendar API v2,
+and the API has been shutdown at 2014-11-17.
+Old version is not worked anymore.</p>
+<p>
+Please <b>update to 3.0.0 above</b> for v3 API transition,
+and <b>check <a href="#apikey">about API key</a></b>.
+</p>
+
+
+<h3 id="custom">Customization</h3>
 
         <p>
           jQuery Google Calendar Flow plug-in is highly configurable with CSS, Javascript option and HTML templating!
@@ -110,6 +122,12 @@ $(function() { $('#gcf-simple').gCalFlow({
 <td>string</td>
 <td>(none)</td>
 <td>Google Calendar ID (<strong>required</strong> if feed_url is missing)</td>
+</tr>
+<tr>
+<td>calid</td>
+<td>string</td>
+<td>(none)</td>
+<td>API key (<strong>recommended</strong>, <a href="#apikey">please read description</a>)</td>
 </tr>
 <tr>
 <td>mode</td>
@@ -227,6 +245,38 @@ $(function() { $('#gcf-simple').gCalFlow({
 </tr>
 </table> 
 
+<h4 id="apikey">Use your own API key for v3 API</h4>
+
+<p>
+gCalFlow plugin now uses Google Calendar API v3.
+All client accesses via v3 API has been checked for quota limit of each API project.
+v2 has no limitation, but v3 has.
+</p>
+
+<p>This plugin has been distributed with a API key for demo or really tiny use.
+If you do not specify <b>apikey</b> option, built-in key will be used.
+In this case, <b>the widget may fail to be rendered by quota</b>.
+<p>
+<p>I recommend you <b>to create your own API key and use it</b> for stable functionality on your site. </p>
+
+<p>To create API key, visit <a href="https://console.developers.google.com/">Google Developers Console</a>. Then, follow bellow;</p>
+<ol>
+<li>Create new project (or use project you created before).</li>
+<li>Check "<b>APIs &amp; auth</b>" -&gt; "<b>Credentials</b>" on side menu.</li>
+<li>Hit "<b>Create new Key</b>" button on "<b>Public API access</b>" section.</li>
+<li>Choose "<b>Browser key</b>" and <b>keep blank on referer limitation</b>.</li>
+</ol>
+<p>
+Finally, set your API key on <b>apikey</b> option for gCalFlow() call like following;
+</p>
+<pre><code>&lt;div id="gcf-simple"&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+$(function() { $('#gcf-simple').gCalFlow({
+  calid: 'your-calendar-id@calendar.goo...',
+  <strong>apikey: 'Your-API-key-string-like-AIzaSyD0vtTU...'</strong>
+});});
+&lt;/script&gt;
+</code></pre>
 
 <h4 id="template">Template</h4>
 
