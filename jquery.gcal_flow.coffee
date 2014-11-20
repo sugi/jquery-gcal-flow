@@ -1,11 +1,14 @@
 $ = jQuery
 
-if window? and window._gCalFlow_debug? and console?
-  log = console
-  log.debug ?= log.log
-else
-  log = {}
-  log.error = log.warn = log.log = log.info = log.debug = ->
+log = {}
+log.error = log.warn = log.log = log.info = log.debug = ->
+
+if window? and console?
+  unless window._gCalFlow_quiet
+    for prio in ['error', 'warn', 'info']
+      log[prio] = if console[prio]? then console[prio] else console.log
+  if window._gCalFlow_debug
+    log.debug = if console.debug? then console.debug else console.log
 
 pad_zero = (num, size = 2) ->
   if 10 * (size-1) <= num then return num
