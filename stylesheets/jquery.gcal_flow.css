@@ -60,10 +60,10 @@
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  background: -webkit-gradient(linear, left top, left bottom, from(white), to(#eeeeee));
-  background: -moz-linear-gradient(top, white, #eeeeee);
-  background: -o-linear-gradient(top, white, #eeeeee);
-  background: linear-gradient(to bottom, white, #eeeeee);
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee));
+  background: -moz-linear-gradient(top, #fff, #eee);
+  background: -o-linear-gradient(top, #fff, #eee);
+  background: linear-gradient(to bottom, #fff, #eee);
   filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffffffff,EndColorStr=#ffeeeeee);
   zoom: 1;
   color: blak; }
@@ -74,10 +74,10 @@
     -moz-border-top-right-radius: 4px;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    background: -webkit-gradient(linear, left top, left bottom, from(#aab1dc), to(#3b4ca5));
-    background: -moz-linear-gradient(top, #aab1dc, #3b4ca5);
-    background: -o-linear-gradient(top, #aab1dc, #3b4ca5);
-    background: linear-gradient(to bottom, #aab1dc, #3b4ca5);
+    background: -webkit-gradient(linear, left top, left bottom, from(#AAB1DC), to(#3B4CA5));
+    background: -moz-linear-gradient(top, #AAB1DC, #3B4CA5);
+    background: -o-linear-gradient(top, #AAB1DC, #3B4CA5);
+    background: linear-gradient(to bottom, #AAB1DC, #3B4CA5);
     filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffAAB1DC,EndColorStr=#ff3B4CA5);
     zoom: 1; }
   .gCalFlow .gcf-item-body-block {
