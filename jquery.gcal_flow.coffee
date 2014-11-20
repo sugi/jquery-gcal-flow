@@ -18,6 +18,7 @@ pad_zero = (num, size = 2) ->
   ret.concat num
 
 class gCalFlow
+  @demo_apikey: 'AIzaSyD0vtTUjLXzH4oKCzNRDymL6E3jKBympf0'
   target: null
   template: $("""<div class="gCalFlow">
       <div class="gcf-header-block">
@@ -50,7 +51,7 @@ class gCalFlow
   opts: {
     maxitem: 15
     calid: null
-    apikey: null
+    apikey: @demo_apikey
     mode: 'upcoming'
     feed_url: null
     auto_scroll: true
@@ -128,6 +129,9 @@ class gCalFlow
 
   fetch: ->
     log.debug "Starting ajax call for #{@gcal_url()}"
+    if @opts.apikey == @constructor.demo_apikey
+      log.warn "You are using built-in demo API key! This key is provided for tiny use or demo only. Your access may be limited."
+      log.warn "Please check document and consider to use your own key."
     success_handler = (data) =>
       log.debug "Ajax call success. Response data:", data
       @render_data data, @
