@@ -223,7 +223,6 @@ class gCalFlow
           ci.find('.gcf-item-location').html(gmapslink)
         else
           ci.find('.gcf-item-location').text(ent.location)
-        ci.find('.gcf-item-location').text ent.gd$where[0].valueString
         ci.find('.gcf-item-link').attr {href: ent.htmlLink}
         log.debug "formatted item entry:", ci[0]
         items.push ci[0]
