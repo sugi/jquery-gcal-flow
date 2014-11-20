@@ -1,3 +1,7 @@
+== v3.0.1 (2014-11-21)
+
+ * Fix logging function (it breaks all by js error)
+
 == v3.0.0 (2014-11-20)
 
  * Updates to use Google Calendar API v3
