@@ -121,7 +121,7 @@ and <b>check <a href="#apikey">about API key</a></b>.
 <td>calid</td>
 <td>string</td>
 <td>(none)</td>
-<td>Google Calendar ID (<strong>required</strong> if feed_url is missing)</td>
+<td>Google Calendar ID (<strong>required</strong> if data_url is missing)</td>
 </tr>
 <tr>
 <td>apikey</td>
@@ -136,10 +136,10 @@ and <b>check <a href="#apikey">about API key</a></b>.
 <td>'upcoming' for upcoming events, or 'updates' for events ordered by last modified.</td>
 </tr>
 <tr>
-<td>feed_url</td>
+<td>data_url</td>
 <td>string</td>
 <td>(none)</td>
-<td>Any Atom feed URL compatible with google's. If this option is specified, 'calid' and 'mode' are ignored.</td>
+<td>Any jsonp data URL compatible with google's. If this option is specified, 'calid' and 'mode' are ignored.</td>
 </tr>
 <tr>
 <td>maxitem</td>
@@ -175,7 +175,7 @@ and <b>check <a href="#apikey">about API key</a></b>.
 <td>link_title</td>
 <td>boolean</td>
 <td>true</td>
-<td>enable link on calendar title</td>
+<td>Enable link on calendar title</td>
 </tr>
 <tr>
 <td>link_item_title</td>
@@ -188,6 +188,12 @@ and <b>check <a href="#apikey">about API key</a></b>.
 <td>boolean</td>
 <td>false</td>
 <td>Enable link on item description</td>
+</tr>
+<tr>
+<td>link_item_location</td>
+<td>boolean</td>
+<td>false</td>
+<td>Enable link on item location with GoogleMap</td>
 </tr>
 <tr>
 <td>link_target</td>
