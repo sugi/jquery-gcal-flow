@@ -61,7 +61,7 @@ class gCalFlow
     calid: null
     apikey: @demo_apikey
     mode: 'upcoming'
-    feed_url: null
+    data_url: null
     auto_scroll: true
     scroll_interval: 10 * 1000
     link_title: true
@@ -122,12 +122,12 @@ class gCalFlow
     log.debug "new options:", @opts
 
   gcal_url: ->
-    if !@opts.calid && !@opts.feed_url
-      log.error "Option calid and feed_url are missing. Abort URL generation"
-      @target.text "Error: You need to set 'calid' or 'feed_url' option."
-      throw "gCalFlow: calid and feed_url missing"
-    if @opts.feed_url
-      @opts.feed_url
+    if !@opts.calid && !@opts.data_url
+      log.error "Option calid and data_url are missing. Abort URL generation"
+      @target.text "Error: You need to set 'calid' or 'data_url' option."
+      throw "gCalFlow: calid and data_url missing"
+    if @opts.data_url
+      @opts.data_url
     else if @opts.mode == 'updates'
       now = new Date().toJSON()
       "https://www.googleapis.com/calendar/v3/calendars/#{@opts.calid}/events?key=#{@opts.apikey}&maxResults=#{@opts.maxitem}&orderBy=updated&timeMin=#{now}&singleEvents=true"
