@@ -230,8 +230,8 @@ class gCalFlow
           ci.find('.gcf-item-description').html link.clone()[desc_body_method] ent.description
         else
           ci.find('.gcf-item-description')[desc_body_method] ent.description
-        if @opts.link_item_location
-          gmapslink = "<a href='https://maps.google.de/maps?q=" + encodeURI(ent.location.replace(" ","+")) + "' target='new'>" + ent.location + "</a>"
+        if @opts.link_item_location && ent.location
+          gmapslink = "<a href='https://maps.google.de/maps?q=" + encodeURI(ent.location.toString().replace(" ","+")) + "' target='new'>" + ent.location + "</a>"
           ci.find('.gcf-item-location').html(gmapslink)
         else
           ci.find('.gcf-item-location').text(ent.location)
@@ -298,7 +298,7 @@ $.fn.gCalFlow = (method) ->
     @each ->
       methods[method].apply $(@), Array.prototype.slice.call(orig_args, 1)
   else if method == 'version'
-    "3.0.1"
+    "3.0.2"
   else
     $.error "Method #{method} does not exist on jQuery.gCalFlow"
 
