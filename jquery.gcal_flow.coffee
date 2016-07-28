@@ -77,6 +77,7 @@ class gCalFlow
     globalize_fmt_date: 'D'
     globalize_fmt_time: 't'
     globalize_fmt_monthday: 'M'
+    hours_fmt: 24
     date_formatter: (d, allday_p) ->
       if Globalize? and Globalize.format?
         if allday_p
@@ -88,7 +89,7 @@ class gCalFlow
         if allday_p
           return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()}"
         else
-          return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()} #{pad_zero d.getHours()}:#{pad_zero d.getMinutes()}"
+          return "#{d.getFullYear()}-#{pad_zero d.getMonth()+1}-#{pad_zero d.getDate()} #{@time_formatter d, @hours_fmt}"
     daterange_formatter: (sd, ed, allday_p) ->
       ret = @date_formatter sd, allday_p
       ed = new Date(ed.getTime() - 86400 * 1000) if allday_p
@@ -102,9 +103,18 @@ class gCalFlow
         if Globalize? and Globalize.format?
           endstr += Globalize.format ed, @globalize_fmt_time
         else
-          endstr += " #{pad_zero ed.getHours()}:#{pad_zero ed.getMinutes()}"
+          endstr += " #{@time_formatter ed, @hours_fmt}"
       ret += " - #{endstr}" if endstr
       return ret
+    time_formatter: (d, fmt = 24) ->
+      hours = d.getHours()
+      mins = d.getMinutes()
+      if fmt == 12
+        if hours >= 12
+          return "#{pad_zero (hours % 12 || 12)}:#{pad_zero mins} PM"
+        else
+          return "#{pad_zero (hours % 12 || 12)}:#{pad_zero mins} AM"
+      return "#{pad_zero hours}:#{pad_zero mins}"
   }
 
   constructor: (target, opts) ->
@@ -203,7 +213,7 @@ class gCalFlow
         log.debug "formatting entry:", ent
         ci = it.clone()
         if ent.start
-  	      if (ent.start.dateTime) 
+  	      if (ent.start.dateTime)
             st = ent.start.dateTime
           else
             st = ent.start.date
@@ -212,7 +222,7 @@ class gCalFlow
           ci.find('.gcf-item-date').html stf
           ci.find('.gcf-item-start-date').html stf
         if ent.end
-  	      if (ent.end.dateTime) 
+  	      if (ent.end.dateTime)
             et = ent.end.dateTime
           else
             et = ent.end.date
@@ -287,7 +297,7 @@ methods =
     if Globalize? and Globalize.culture?
       Globalize.culture @data('gCalFlow').obj.opts.globalize_culture
     @data('gCalFlow').obj.fetch()
-      
+
 $.fn.gCalFlow = (method) ->
   orig_args = arguments
   if typeof method == 'object' || !method
